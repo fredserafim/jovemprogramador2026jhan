@@ -31,7 +31,7 @@ public class Aula17 {
                     System.out.println("Insira sua senha: ");
                     int senha = sc.nextInt();
 
-                    String insert = "insert into usuario ( nome, senha) values(?,?)";
+                    String insert = "insert into usuario ( nome, senha) values(?,?) ";
                     PreparedStatement psInsert = conexao.prepareStatement(insert);
                     psInsert.setString(1,nome);
                     psInsert.setInt(2,senha);
@@ -43,6 +43,7 @@ public class Aula17 {
                     String nomeLogin = sc.nextLine();
                     int senhaLogin = sc.nextInt();
                     break;
+                    // verificar usuario
 
 
 
