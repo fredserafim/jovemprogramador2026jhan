@@ -31,13 +31,13 @@ public class Aula17 {
 
             if (opLogin == 1) {
                 System.out.println("Nome:");
-                String nome = sc.findInLine();
+                String nome = sc.nextLine();
 
                 System.out.println("Senha:");
                 String senha = sc.nextLine();
 
-                String MySQL -"INSERT INTO usuario (nome, senha) VALUES (?, ?)";
-                PreparedStatement ps = conexao.prepareStatement(MySQL);
+                String mySQL ="INSERT INTO usuario (nome, senha) VALUES (?, ?)";
+                PreparedStatement ps = conexao.prepareStatement(mySQL);
                 ps.setString(1, nome);
                 ps.setString(2, senha);
                 ps.executeUpdate();
