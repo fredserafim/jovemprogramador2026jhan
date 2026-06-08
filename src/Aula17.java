@@ -15,7 +15,7 @@ public class Aula17 {
             Connection conexao = DriverManager.getConnection(url, user, password);
             System.out.println("Conectado!");
 
-            Thread.sleep(1100);
+            /*Thread.sleep(1100);
             System.out.println("""
                   *****Login*****
                   1 - Cadastrar novo usuario
@@ -57,10 +57,10 @@ public class Aula17 {
 
 
 
-            }
+            } */
 
             do {
-                Thread.sleep(1100);
+                Thread.sleep(1000);
                 System.out.printf("""
                       ====Caderno Receitas da Famìlia Casagrande====
                       1 - Adicionar  Receita
@@ -90,7 +90,7 @@ public class Aula17 {
                         System.out.println( "Digite o id do ingrediente: ");
                         int ingredientes_id = sc.nextInt();
                         Thread.sleep(1100);
-                        System.out.println(" Digite a quantidade: ");
+                        System.out.println("Digite a quantidade: ");
                         double quantidade = sc.nextDouble();
                         Thread.sleep(1100);
                         System.out.println("Digite o tempo: ");
@@ -103,10 +103,10 @@ public class Aula17 {
                         System.out.println("Digite quantas pessoas serve: ");
                         int porcoes = sc.nextInt();
                         Thread.sleep(1100);
-                        System.out.println("Qual a categoria: ");
+                        System.out.println("Qual a categoria( 1 doce, 2 salgado, 3 agridoce: ");
                         int categoria_id = sc.nextInt();
                         Thread.sleep(1100);
-                        System.out.println(" Quais utensílios necessários");
+                        System.out.println("Quais utensílios necessários: ");
                         int ferramentas_id = sc.nextInt();
                         Thread.sleep(1100);
                         System.out.println("Modo de preparo: ");
