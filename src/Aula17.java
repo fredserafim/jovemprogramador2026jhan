@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.Scanner;
+import java.util.SplittableRandom;
 
 public class Aula17 {
     public  static void main(String[] args) {
@@ -15,50 +16,61 @@ public class Aula17 {
             Connection conexao = DriverManager.getConnection(url, user, password);
             System.out.println("Conectado!");
 
+            int usuarioId = -1;
+
+            //===================================== LOGIN ===============================
             Thread.sleep(1100);
             System.out.println("""
-                  *****Login*****
+                  *****LOGIN*****
                   1 - Cadastrar novo usuario
                   2 - Entrar
-                  
                   """);
-            usuario = sc.nextInt();
+
+            int opLogin = sc.nextInt();
             sc.nextLine();
 
-            switch (usuario){
-                case 1 :
-                    Thread.sleep(1100);
-                    System.out.println("Digite seu nome: ");
-                    String nome = sc.nextLine();
-                    Thread.sleep(1100);
-                    System.out.println("Insira sua senha: ");
-                    int senha = sc.nextInt();
-                    Thread.sleep(1100);
+            if (opLogin == 1) {
+                System.out.println("Nome:");
+                String nome = sc.findInLine();
 
-                    String insert = "insert into usuario ( nome, senha) values(?,?) ";
-                    PreparedStatement psInsert = conexao.prepareStatement(insert);
-                    psInsert.setString(1,nome);
-                    psInsert.setInt(2,senha);
-                    psInsert.executeUpdate();
-                    System.out.println("Usuario inserido");
-                    Thread.sleep(1100);
-                    break;
+                System.out.println("Senha:");
+                String senha = sc.nextLine();
 
-                case 2 :
-                    Thread.sleep(1100);
-                    String nomeLogin = sc.nextLine();
-                    int senhaLogin = sc.nextInt();
-                    break;
-                    // verificar usuario
+                String MySQL -"INSERT INTO usuario (nome, senha) VALUES (?, ?)";
+                PreparedStatement ps = conexao.prepareStatement(MySQL);
+                ps.setString(1, nome);
+                ps.setString(2, senha);
+                ps.executeUpdate();
 
-
-
-
-
-
-
+                System.out.println("Usuário cadastrado com sucesso!");
+                return;
             }
 
+            if (opLogin == 2) {
+                System.out.println("Nome:");
+                String nome = sc.nextLine();
+
+                System.out.println("Senha:");
+                String senha = sc.nextLine();
+
+                String MySQL = "SELECT id FROM usuario WHERE nome = ? AND senha = ?";
+                PreparedStatement ps = conexao.prepareStatement(MySQL);
+                ps.setString(1, nome);
+                ps.setString(2, senha);
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    usuarioId = rs.getInt("id");
+                    System.out.println("Login realizado!");
+                } else {
+                    System.out.println("Usuário Inválido!");
+                    return;
+                }
+            }
+
+            
+            
             do {
                 Thread.sleep(1100);
                 System.out.printf("""
