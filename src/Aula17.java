@@ -97,8 +97,8 @@ public class Aula17 {
                         int tempo = sc.nextInt();
                         sc.nextLine();
                         Thread.sleep(1100);
-                        System.out.println("Digite qual a dificuldade(facil, medio, dificil): ");
-                        String dificuldade = sc.nextLine();
+                        System.out.println("Digite qual a dificuldade( 1 facil, 2 medio, 3 dificil): ");
+                        int complexidade_id = sc.nextInt();
                         Thread.sleep(1100);
                         System.out.println("Digite quantas pessoas serve: ");
                         int porcoes = sc.nextInt();
@@ -118,14 +118,14 @@ public class Aula17 {
 
 
 
-                        String insert = "insert into  ( titulo, ingredientes_id, quantidade, tempo, dificuldade,porcoes, categoria_id," +
+                        String insert = "insert into  ( titulo, ingredientes_id, quantidade, tempo, complexidade_id,porcoes, categoria_id," +
                                 "ferramentas_id, preparo_id, usuario_id, data_criacao) values (?,?,?,?,?,?,?,?,?,?,?)";
                         PreparedStatement psInsert = conexao.prepareStatement(insert);
                         psInsert.setString(1,titulo);
                         psInsert.setInt(2,ingredientes_id);
                         psInsert.setDouble(3,quantidade);
                         psInsert.setInt(4,tempo);
-                        psInsert.setString(5,dificuldade);
+                        psInsert.setInt(5,complexidade_id);
                         psInsert.setInt(6,porcoes);
                         psInsert.setInt(7,categoria_id);
                         psInsert.setInt(8,ferramentas_id);
