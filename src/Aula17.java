@@ -146,18 +146,25 @@ public class Aula17 {
                         System.out.println("Qual receita deseja: ");
                         String tituloID = sc.nextLine();
                         String select = """
-                                select 
-                                from receitas
-                                where titulo like %?%
-                                order by desc;
-                                """ ;
+                                select re.titulo, com.dificuldade, cat.nome, fer.utensilios, pre.modo_preparo from receita re
+                                join complexidade com on re.complexidade_id = com.id
+                                join categoria cat on re.categoria_id = cat.id
+                                join ferramentas fer on re.ferramentas_id = fer.id
+                                join preparo pre on re.preparo_id = pre.id
+                                join usuario usu on re.usuario_id = usu.id
+                                where re.titulo like "%morango%"
+                                order by re.titulo desc;
+                                """, + tituloID;
 
                         Statement stmt = conexao.createStatement();
                         ResultSet rs = stmt.executeQuery(select);
                         Thread.sleep(1100);
                         System.out.println("Lista");
                         while(rs.next()){
-                            System.out.printf("%d - %s - %s\n", rs.getInt("id"), rs.getString("nome"), rs.getString("email")
+                            System.out.printf("%d - %s - %s\n",
+                                    rs.getInt("id"),
+                                    rs.getString("nome"),
+                                    rs.getString("email")
                             );
 
                         }
