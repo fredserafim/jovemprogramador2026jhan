@@ -53,8 +53,8 @@ public class Aula17 {
                 System.out.println("Senha:");
                 String senha = sc.nextLine();
 
-                String MySQL = "SELECT id FROM usuario WHERE nome = ? AND senha = ?";
-                PreparedStatement ps = conexao.prepareStatement(MySQL);
+                String mySQL = "SELECT id FROM usuario WHERE nome = ? AND senha = ?";
+                PreparedStatement ps = conexao.prepareStatement(mySQL);
                 ps.setString(1, nome);
                 ps.setString(2, senha);
 
