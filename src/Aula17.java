@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.Scanner;
+import java.util.SplittableRandom;
 
 public class Aula17 {
     public  static void main(String[] args) {
@@ -15,50 +16,61 @@ public class Aula17 {
             Connection conexao = DriverManager.getConnection(url, user, password);
             System.out.println("Conectado!");
 
-            /*Thread.sleep(1100);
+            int usuarioId = -1;
+
+            //===================================== LOGIN ===============================
+            Thread.sleep(1100);
             System.out.println("""
-                  *****Login*****
+                  *****LOGIN*****
                   1 - Cadastrar novo usuario
                   2 - Entrar
-                  
                   """);
-            usuario = sc.nextInt();
+
+            int opLogin = sc.nextInt();
             sc.nextLine();
 
-            switch (usuario){
-                case 1 :
-                    Thread.sleep(1100);
-                    System.out.println("Digite seu nome: ");
-                    String nome = sc.nextLine();
-                    Thread.sleep(1100);
-                    System.out.println("Insira sua senha: ");
-                    int senha = sc.nextInt();
-                    Thread.sleep(1100);
+            if (opLogin == 1) {
+                System.out.println("Nome:");
+                String nome = sc.nextLine();
 
-                    String insert = "insert into usuario ( nome, senha) values(?,?) ";
-                    PreparedStatement psInsert = conexao.prepareStatement(insert);
-                    psInsert.setString(1,nome);
-                    psInsert.setInt(2,senha);
-                    psInsert.executeUpdate();
-                    System.out.println("Usuario inserido");
-                    Thread.sleep(1100);
-                    break;
+                System.out.println("Senha:");
+                String senha = sc.nextLine();
 
-                case 2 :
-                    Thread.sleep(1100);
-                    String nomeLogin = sc.nextLine();
-                    int senhaLogin = sc.nextInt();
-                    break;
-                    // verificar usuario
+                String mySQL ="INSERT INTO usuario (nome, senha) VALUES (?, ?)";
+                PreparedStatement ps = conexao.prepareStatement(mySQL);
+                ps.setString(1, nome);
+                ps.setString(2, senha);
+                ps.executeUpdate();
+
+                System.out.println("Usuário cadastrado com sucesso!");
+                return;
+            }
+
+            if (opLogin == 2) {
+                System.out.println("Nome:");
+                String nome = sc.nextLine();
+
+                System.out.println("Senha:");
+                String senha = sc.nextLine();
+
+                String mySQL = "SELECT id FROM usuario WHERE nome = ? AND senha = ?";
+                PreparedStatement ps = conexao.prepareStatement(mySQL);
+                ps.setString(1, nome);
+                ps.setString(2, senha);
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    usuarioId = rs.getInt("id");
+                    System.out.println("Login realizado!");
+                } else {
+                    System.out.println("Usuário Inválido!");
+                    return;
+                }
+            }
 
 
-
-
-
-
-
-            } */
-
+            //===================================== RECEITA ===============================
             do {
                 Thread.sleep(1000);
                 System.out.printf("""
@@ -146,18 +158,25 @@ public class Aula17 {
                         System.out.println("Qual receita deseja: ");
                         String tituloID = sc.nextLine();
                         String select = """
-                                select 
-                                from receitas
-                                where titulo like %?%
-                                order by desc;
-                                """ ;
+                                select re.titulo, com.dificuldade, cat.nome, fer.utensilios, pre.modo_preparo from receita re
+                                join complexidade com on re.complexidade_id = com.id
+                                join categoria cat on re.categoria_id = cat.id
+                                join ferramentas fer on re.ferramentas_id = fer.id
+                                join preparo pre on re.preparo_id = pre.id
+                                join usuario usu on re.usuario_id = usu.id
+                                where re.titulo like "%morango%"
+                                order by re.titulo desc;
+                                """;
 
                         Statement stmt = conexao.createStatement();
                         ResultSet rs = stmt.executeQuery(select);
                         Thread.sleep(1100);
                         System.out.println("Lista");
                         while(rs.next()){
-                            System.out.printf("%d - %s - %s\n", rs.getInt("id"), rs.getString("nome"), rs.getString("email")
+                            System.out.printf("%d - %s - %s\n",
+                                    rs.getInt("id"),
+                                    rs.getString("nome"),
+                                    rs.getString("email")
                             );
 
                         }
