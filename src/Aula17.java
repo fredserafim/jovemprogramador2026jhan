@@ -166,7 +166,7 @@ public class Aula17 {
                                 join usuario usu on re.usuario_id = usu.id
                                 where re.titulo like "%morango%"
                                 order by re.titulo desc;
-                                """, + tituloID;
+                                """;
 
                         Statement stmt = conexao.createStatement();
                         ResultSet rs = stmt.executeQuery(select);
