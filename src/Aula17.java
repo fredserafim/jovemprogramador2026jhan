@@ -44,7 +44,7 @@ public class Aula17 {
 
                 System.out.println("Usuário cadastrado com sucesso!");
 
-            }
+            } */
 
             if (opLogin == 2) {
                 System.out.println("Nome:");
