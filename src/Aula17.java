@@ -214,30 +214,33 @@ public class Aula17 {
                             }
                             Thread.sleep(1100);
                             break;
-                            case 3:
-                                System.out.println("update");
-                                Thread.sleep(1100);
-                                System.out.println("Digite o ID para atualizar: ");
-                                int idUpdate = sc.nextInt();
-                                sc.nextLine();
-                                Thread.sleep(1100);
-                                System.out.println("Novo nome: ");
-                                String nomeUpdate = sc.nextLine();
-                                Thread.sleep(1100);
-                                System.out.println("Novo email: ");
-                                String emailUpdate = sc.nextLine();
-                                Thread.sleep(1100);
+                    case 3:
+                        System.out.println("update");
+                        Thread.sleep(1100);
+                        System.out.println("Digite o ID para atualizar: ");
+                        int idUpdate = sc.nextInt();
+                        sc.nextLine();
+                        Thread.sleep(1100);
+                        System.out.println("Novo nome: ");
+                        String nomeUpdate = sc.nextLine();
+                        Thread.sleep(1100);
+                        System.out.println("Novo email: ");
+                        String emailUpdate = sc.nextLine();
+                        Thread.sleep(1100);
 
-                                String updade = "update +++ set +++ = ?, *** = ? where*** = ?";
-                                PreparedStatement psUpdate = conexao.prepareStatement(updade);
-                                psUpdate.setString(1, nomeUpdate);
-                                psUpdate.setString(2, emailUpdate);
-                                psUpdate.setInt(3, idUpdate);
-                                psUpdate.executeUpdate();
-                                Thread.sleep(1100);
-                                System.out.println("Receita atualizada!");
-                                Thread.sleep(1100);
-                                break;
+                        String updade = "UPDATE receitas SET nome = ?, email = ? WHERE id = ?";
+
+                        PreparedStatement psUpdate = conexao.prepareStatement(updade);
+
+                        psUpdate.setString(1, nomeUpdate);
+                        psUpdate.setString(2, emailUpdate);
+                        psUpdate.setInt(3, idUpdate);
+
+                        psUpdate.executeUpdate();
+                        Thread.sleep(1100);
+                        System.out.println("Receita atualizada!");
+                        Thread.sleep(1100);
+                        break;
                             case 4:
                                 System.out.println("delete");
                                 Thread.sleep(1100);
