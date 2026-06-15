@@ -221,19 +221,20 @@ public class Aula17 {
                         int idUpdate = sc.nextInt();
                         sc.nextLine();
                         Thread.sleep(1100);
-                        System.out.println("Novo nome: ");
-                        String nomeUpdate = sc.nextLine();
+                        System.out.println("Novo título: ");
+                        String tituloUpdate = sc.nextLine();
                         Thread.sleep(1100);
-                        System.out.println("Novo email: ");
-                        String emailUpdate = sc.nextLine();
+                        System.out.println("Novo tempo de preparo (minutos): ");
+                        int tempoUpdate = sc.nextInt();
+                        sc.nextLine();
                         Thread.sleep(1100);
 
-                        String updade = "UPDATE receitas SET nome = ?, email = ? WHERE id = ?";
+                        String updade = "UPDATE receita SET titulo = ?, tempo = ? WHERE id = ?";
 
                         PreparedStatement psUpdate = conexao.prepareStatement(updade);
 
-                        psUpdate.setString(1, nomeUpdate);
-                        psUpdate.setString(2, emailUpdate);
+                        psUpdate.setString(1, tituloUpdate);
+                        psUpdate.setInt(2, tempoUpdate);
                         psUpdate.setInt(3, idUpdate);
 
                         psUpdate.executeUpdate();
