@@ -43,8 +43,8 @@ public class Aula17 {
                 ps.executeUpdate();
 
                 System.out.println("Usuário cadastrado com sucesso!");
-                return;
-            }
+
+            } */
 
             if (opLogin == 2) {
                 System.out.println("Nome:");
@@ -73,7 +73,7 @@ public class Aula17 {
 
             //===================================== RECEITA ===============================
             do {
-                Thread.sleep(1100);
+                Thread.sleep(1000);
                 System.out.printf("""
                       ====Caderno Receitas da Famìlia Casagrande====
                       1 - Adicionar  Receita
@@ -103,7 +103,7 @@ public class Aula17 {
                         System.out.println( "Digite o id do ingrediente: ");
                         int ingredientes_id = sc.nextInt();
                         Thread.sleep(1100);
-                        System.out.println(" Digite a quantidade: ");
+                        System.out.println("Digite a quantidade: ");
                         double quantidade = sc.nextDouble();
                         Thread.sleep(1100);
                         System.out.println("Digite o tempo: ");
@@ -116,10 +116,10 @@ public class Aula17 {
                         System.out.println("Digite quantas pessoas serve: ");
                         int porcoes = sc.nextInt();
                         Thread.sleep(1100);
-                        System.out.println("Qual a categoria: ");
+                        System.out.println("Qual a categoria( 1 doce, 2 salgado, 3 agridoce: ");
                         int categoria_id = sc.nextInt();
                         Thread.sleep(1100);
-                        System.out.println(" Quais utensílios necessários");
+                        System.out.println("Quais utensílios necessários: ");
                         int ferramentas_id = sc.nextInt();
                         Thread.sleep(1100);
                         System.out.println("Modo de preparo: ");
@@ -156,78 +156,104 @@ public class Aula17 {
                     case 2 :
                         System.out.println("read");
                         Thread.sleep(1100);
-                        System.out.println("Qual receita deseja: ");
-                        String tituloID = sc.nextLine();
+                        System.out.println(" o que gostaria de cozinhar: ");
+                        String tituloid = sc.nextLine();
                         String select = """
-                                select 
-                                from receitas
-                                where titulo like %?%
-                                order by desc;
-                                """ ;
-
+                                select id, titulo
+                                from receita
+                                where titulo like '%?%'
+                                order by desc;"""+tituloid;
                         Statement stmt = conexao.createStatement();
                         ResultSet rs = stmt.executeQuery(select);
                         Thread.sleep(1100);
-                        System.out.println("Lista");
-                        while(rs.next()){
-                            System.out.printf("%d - %s - %s\n", rs.getInt("id"), rs.getString("nome"), rs.getString("email")
+                        System.out.println("Listas");
+                        while(rs.next()) {
+                            System.out.printf("%d - %s - %s\n",
+                                    rs.getInt("id"),
+                                    rs.getString("titulo")
                             );
+                            System.out.println("Qual receita deseja( digite o ID): ");
+                            String tituloid1 = sc.nextLine();
+                            String  select1 = """
+                                    select re.titulo, com.dificuldade, cat.nome, fer.utensilios, pre.modo_preparo from receita re
+                                    join complexidade com on re.complexidade_id = com.id
+                                    join categoria cat on re.categoria_id = cat.id
+                                    join ferramentas fer on re.ferramentas_id = fer.id
+                                    join preparo pre on re.preparo_id = pre.id
+                                    join usuario usu on re.usuario_id = usu.id
+                                    where re.titulo like "%morango%"
+                                    order by re.titulo desc;
+                                    """+tituloid1;
 
+                            stmt = conexao.createStatement();
+                            rs = stmt.executeQuery(select1);
+                            Thread.sleep(1100);
+                            System.out.println("Lista");
                         }
-                        Thread.sleep(1100);
-                        break;
-                    case 3 :
-                        System.out.println("update");
-                        Thread.sleep(1100);
-                        System.out.println("Digite o ID para atualizar: ");
-                        int idUpdate = sc.nextInt();
-                        sc.nextLine();
-                        Thread.sleep(1100);
-                        System.out.println("Novo nome: ");
-                        String nomeUpdate = sc.nextLine();
-                        Thread.sleep(1100);
-                        System.out.println("Novo email: ");
-                        String emailUpdate =  sc.nextLine();
-                        Thread.sleep(1100);
+                            while (rs.next()) {
+                                System.out.printf("%d - %s - %s\n",
+                                        rs.getInt("id"),
+                                        rs.getString("nome"),
+                                        rs.getString("email")
+                                );
 
-                        String updade = "update +++ set +++ = ?, *** = ? where*** = ?";
-                        PreparedStatement psUpdate = conexao.prepareStatement(updade);
-                        psUpdate.setString(1,nomeUpdate);
-                        psUpdate.setString(2,emailUpdate);
-                        psUpdate.setInt( 3,idUpdate);
-                        psUpdate.executeUpdate();
-                        Thread.sleep(1100);
-                        System.out.println("Receita atualizada!");
-                        Thread.sleep(1100);
-                        break;
-                    case 4 :
-                        System.out.println("delete");
-                        Thread.sleep(1100);
-                        System.out.println("Digite o ID que gostaria de deletar: ");
-                        int idDelete = sc.nextInt();
-                        sc.nextLine();
-                        Thread.sleep(1100);
+                            }
+                            Thread.sleep(1100);
+                            break;
+                            case 3:
+                                System.out.println("update");
+                                Thread.sleep(1100);
+                                System.out.println("Digite o ID para atualizar: ");
+                                int idUpdate = sc.nextInt();
+                                sc.nextLine();
+                                Thread.sleep(1100);
+                                System.out.println("Novo nome: ");
+                                String nomeUpdate = sc.nextLine();
+                                Thread.sleep(1100);
+                                System.out.println("Novo email: ");
+                                String emailUpdate = sc.nextLine();
+                                Thread.sleep(1100);
 
-                        String delete = " delete from *** where id =?";
-                        PreparedStatement psDelete = conexao.prepareStatement(delete);
-                        psDelete.setInt(1,idDelete);
-                        psDelete.executeUpdate();
-                        Thread.sleep(1100);
-                        System.out.println("Usuario Deletado");
-                        Thread.sleep(1100);
+                                String updade = "update +++ set +++ = ?, *** = ? where*** = ?";
+                                PreparedStatement psUpdate = conexao.prepareStatement(updade);
+                                psUpdate.setString(1, nomeUpdate);
+                                psUpdate.setString(2, emailUpdate);
+                                psUpdate.setInt(3, idUpdate);
+                                psUpdate.executeUpdate();
+                                Thread.sleep(1100);
+                                System.out.println("Receita atualizada!");
+                                Thread.sleep(1100);
+                                break;
+                            case 4:
+                                System.out.println("delete");
+                                Thread.sleep(1100);
+                                System.out.println("Digite o ID que gostaria de deletar: ");
+                                int idDelete = sc.nextInt();
+                                sc.nextLine();
+                                Thread.sleep(1100);
 
-                        receitasN = -1;
+                                String delete = " delete from *** where id =?";
+                                PreparedStatement psDelete = conexao.prepareStatement(delete);
+                                psDelete.setInt(1, idDelete);
+                                psDelete.executeUpdate();
+                                Thread.sleep(1100);
+                                System.out.println("Usuario Deletado");
+                                Thread.sleep(1100);
 
-                        break;
-                    case 0 :
-                        Thread.sleep(1100);
-                        System.out.println("Programa Finalizado");
-                        Thread.sleep(1100);
-                        break;
-                    default:
-                        Thread.sleep(1100);
-                        System.out.println("Opção invalida!");
-                        Thread.sleep(1100);
+                                receitasN = -1;
+
+                                break;
+                            case 0:
+                                Thread.sleep(1100);
+                                System.out.println("Programa Finalizado");
+                                Thread.sleep(1100);
+                                break;
+                            default:
+                                Thread.sleep(1100);
+                                System.out.println("Opção invalida!");
+                                Thread.sleep(1100);
+
+
 
                 }
             }while(opcao!=0);
