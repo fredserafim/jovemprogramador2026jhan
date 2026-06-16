@@ -11,11 +11,14 @@ public class Aula17 {
         String url = "jdbc:mysql://127.0.0.1:3306/caderno_receita";
         String user = "root";
         String password = "";
-        int opcao, usuario, receitasN = 0;
+        int opcao, usuario;
+
+
 
         try{
             Connection conexao = DriverManager.getConnection(url, user, password);
             System.out.println("Conectado!");
+
 
             int usuarioId = -1;
 
@@ -73,6 +76,16 @@ public class Aula17 {
             //===================================== RECEITA ===============================
             do {
                 Thread.sleep(1000);
+                String sql = "SELECT COUNT(*) AS total FROM receita";
+
+                PreparedStatement ps = conexao.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery();
+
+                int totalReceitas = 0;
+
+                if (rs.next()) {
+                    totalReceitas = rs.getInt("total");
+                }
                 System.out.printf("""
                       ====Caderno Receitas da Famìlia Casagrande====
                       1 - Adicionar  Receita
@@ -83,8 +96,8 @@ public class Aula17 {
                       
                       
                       
-                      Receitas existentes : %S
-                      """,receitasN);
+                      Receitas existentes : %d
+                      """,totalReceitas);
                 Thread.sleep(1000);
                 System.out.println(" Digite a opção :");
                 opcao = sc.nextInt();
@@ -151,7 +164,7 @@ public class Aula17 {
                         System.out.println("Receita salva com sucesso!");
                         Thread.sleep(1000);
 
-                        receitasN++;
+
 
                         break;
                     case 2 :
@@ -173,45 +186,73 @@ public class Aula17 {
                             System.out.printf("%d - %s \n",
                                     rsReceitas.getInt("id"),
                                     rsReceitas.getString("titulo")
-                            );
+                            );}
                             System.out.println("Qual receita deseja( digite o ID): ");
                             int tituloid1 = sc.nextInt();
                             sc.nextLine();
                             String  select1 = """
-                                    select re.id, re.titulo, com.dificuldade, cat.nome, fer.utensilios, pre.modo_preparo, igrs.ingrediente, igr.quantidade, igrs.unidade_medida  from receita re
+                                    select re.id, re.titulo, com.dificuldade as dificuldade, cat.nome as categoria, fer.utensilios, pre.modo_preparo, igrs.ingrediente, igr.quantidade, igrs.unidade_medida  from receita re
                                     join complexidade com on re.complexidade_id = com.id
                                     join categoria cat on re.categoria_id = cat.id
                                     join ferramentas fer on re.ferramentas_id = fer.id
                                     join preparo pre on re.preparo_id = pre.id
                                     join usuario usu on re.usuario_id = usu.id
-                                    join re on igr.receita_id = re.id
                                     join ingrediente_receita igr on igr.receita_id = re.id
                                     join ingredientes igrs on igr.ingredientes_id = igrs.id
                                     where re.id = ?
                                     order by re.titulo desc;
                                     """;
 
-                            PreparedStatement psSelect1 = conexao.prepareStatement(select1);
-                            psSelect1.setInt(1, tituloid1);
-                            ResultSet rsDetalhe = psSelect1.executeQuery();
+
+                            PreparedStatement psSelect2 = conexao.prepareStatement(select1);
+                            psSelect2.setInt(1, tituloid1);
+                            ResultSet rsDetalhe = psSelect2.executeQuery();
                             Thread.sleep(1000);
                             System.out.println("Lista");
+
+
+                        String ultima = "";
+                        String modoPreparo = "";
+
+                        while (rsDetalhe.next()) {
+                            Thread.sleep(1000);
+
+                            String receita = rsDetalhe.getString("titulo");
+
+                            if (!receita.equals(ultima)) {
+                                System.out.println("\n=== " + receita + " ===");
+                                ultima = receita;
+
+                                modoPreparo = rsDetalhe.getString("modo_preparo");
+                            }
+
+                            System.out.printf(
+                                    "- %s: %.2f %s%n",
+                                    rsDetalhe.getString("ingrediente"),
+                                    rsDetalhe.getDouble("quantidade"),
+                                    rsDetalhe.getString("unidade_medida")
+                            );
                         }
-                            while (rsDetalhe.next()) {
-                                System.out.printf("%s - %s - %s - %s %s - %s - %d\n",
-                                        rsDetalhe.getString("Titulo"),
-                                        rsDetalhe.getString("Dificuldade"),
-                                        rsDetalhe.getString("nome"),
+
+                        System.out.println("\nModo de preparo:\n");
+                        System.out.println(modoPreparo);
+                        Thread.sleep(1000);
+                           /* while (rsDetalhe.next()) {
+                                System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
+                                        rsDetalhe.getString("titulo"),
+                                        rsDetalhe.getString("dificuldade"),
+                                        rsDetalhe.getString("categoria"),
                                         rsDetalhe.getString("utensilios"),
                                         rsDetalhe.getString("modo_preparo"),
                                         rsDetalhe.getString("ingrediente"),
-                                        rsDetalhe.getInt("quantidade"),
+                                        rsDetalhe.getDouble("quantidade"),
                                         rsDetalhe.getString("unidade_medida")
 
 
                                 );
 
-                            }
+
+                            }*/
                             Thread.sleep(1100);
                             break;
                             case 3:
@@ -254,7 +295,7 @@ public class Aula17 {
                                 System.out.println("Usuario Deletado");
                                 Thread.sleep(1100);
 
-                                receitasN = -1;
+
 
                                 break;
                             case 0:
