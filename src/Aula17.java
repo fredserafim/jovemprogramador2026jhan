@@ -11,7 +11,7 @@ public class Aula17 {
         String url = "jdbc:mysql://127.0.0.1:3306/caderno_receita";
         String user = "root";
         String password = "";
-        int opcao, usuario;
+        int opcao;
 
 
 
@@ -215,6 +215,9 @@ public class Aula17 {
 
                         String ultima = "";
                         String modoPreparo = "";
+                        String usuario = "";
+                        Date dataCriacao = null;
+
 
                         while (rsDetalhe.next()) {
                             Thread.sleep(1000);
@@ -226,12 +229,12 @@ public class Aula17 {
                                 ultima = receita;
 
                                 modoPreparo = rsDetalhe.getString("modo_preparo");
+                                usuario = rsDetalhe.getString("nome");
+                                dataCriacao = rsDetalhe.getDate("data_criacao");
                             }
 
                             System.out.printf(
-                                    "- %s\n%tF\n %s: %.2f %s%n",
-                                    rsDetalhe.getString("usu.nome"),
-                                    rsDetalhe.getDate("data_criacao"),
+                                    "- %s: %.2f %s%n",
                                     rsDetalhe.getString("ingrediente"),
                                     rsDetalhe.getDouble("quantidade"),
                                     rsDetalhe.getString("unidade_medida")
@@ -240,6 +243,7 @@ public class Aula17 {
 
                         System.out.println("\nModo de preparo:\n");
                         System.out.println(modoPreparo);
+                        System.out.printf("- %s\n%tF -\n ", usuario, dataCriacao);
                         Thread.sleep(1000);
                            /* while (rsDetalhe.next()) {
                                 System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
