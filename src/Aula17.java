@@ -197,7 +197,7 @@ public class Aula17 {
                             Thread.sleep(1000);
                             System.out.println("Lista");
                         }
-                            while (rsDetalhe.next()) {
+                           /* while (rsDetalhe.next()) {
                                 System.out.printf("%s - %s - %s - %s %s - %s - %d\n",
                                         rsDetalhe.getString("Titulo"),
                                         rsDetalhe.getString("Dificuldade"),
@@ -211,7 +211,7 @@ public class Aula17 {
 
                                 );
 
-                            }
+                            }*/
                             Thread.sleep(1100);
                             break;
                     case 3:
