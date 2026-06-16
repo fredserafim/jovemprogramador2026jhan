@@ -243,7 +243,7 @@ public class Aula17 {
 
                         System.out.println("\nModo de preparo:\n");
                         System.out.println(modoPreparo);
-                        System.out.printf("- %s\n%tF -\n ", usuario, dataCriacao);
+                        System.out.printf(" Criado por - %s\n%tF -\n ", usuario, dataCriacao);
                         Thread.sleep(1000);
                            /* while (rsDetalhe.next()) {
                                 System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
