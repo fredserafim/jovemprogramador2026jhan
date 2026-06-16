@@ -11,7 +11,7 @@ public class Aula17 {
         String url = "jdbc:mysql://127.0.0.1:3306/caderno_receita";
         String user = "root";
         String password = "";
-        int opcao, usuario;
+        int opcao;
 
 
 
@@ -192,7 +192,8 @@ public class Aula17 {
                             int tituloid1 = sc.nextInt();
                             sc.nextLine();
                             String  select1 = """
-                                    select re.id, re.titulo, com.dificuldade as dificuldade, cat.nome as categoria, fer.utensilios, pre.modo_preparo, igrs.ingrediente, igr.quantidade, igrs.unidade_medida  from receita re
+                                    select re.id, re.titulo, com.dificuldade as dificuldade, cat.nome as categoria,
+                                    fer.utensilios, pre.modo_preparo, igrs.ingrediente, igr.quantidade, igrs.unidade_medida,usu.nome , re.data_criacao  from receita re
                                     join complexidade com on re.complexidade_id = com.id
                                     join categoria cat on re.categoria_id = cat.id
                                     join ferramentas fer on re.ferramentas_id = fer.id
@@ -214,6 +215,9 @@ public class Aula17 {
 
                         String ultima = "";
                         String modoPreparo = "";
+                        String usuario = "";
+                        Date dataCriacao = null;
+
 
                         while (rsDetalhe.next()) {
                             Thread.sleep(1000);
@@ -225,6 +229,8 @@ public class Aula17 {
                                 ultima = receita;
 
                                 modoPreparo = rsDetalhe.getString("modo_preparo");
+                                usuario = rsDetalhe.getString("nome");
+                                dataCriacao = rsDetalhe.getDate("data_criacao");
                             }
 
                             System.out.printf(
@@ -237,6 +243,7 @@ public class Aula17 {
 
                         System.out.println("\nModo de preparo:\n");
                         System.out.println(modoPreparo);
+                        System.out.printf("- %s\n%tF -\n ", usuario, dataCriacao);
                         Thread.sleep(1000);
                            /* while (rsDetalhe.next()) {
                                 System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
