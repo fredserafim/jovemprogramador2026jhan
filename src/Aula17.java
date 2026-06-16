@@ -192,7 +192,8 @@ public class Aula17 {
                             int tituloid1 = sc.nextInt();
                             sc.nextLine();
                             String  select1 = """
-                                    select re.id, re.titulo, com.dificuldade as dificuldade, cat.nome as categoria, fer.utensilios, pre.modo_preparo, igrs.ingrediente, igr.quantidade, igrs.unidade_medida  from receita re
+                                    select re.id, re.titulo, com.dificuldade as dificuldade, cat.nome as categoria,
+                                    fer.utensilios, pre.modo_preparo, igrs.ingrediente, igr.quantidade, igrs.unidade_medida,usu.nome , re.data_criacao  from receita re
                                     join complexidade com on re.complexidade_id = com.id
                                     join categoria cat on re.categoria_id = cat.id
                                     join ferramentas fer on re.ferramentas_id = fer.id
@@ -228,7 +229,9 @@ public class Aula17 {
                             }
 
                             System.out.printf(
-                                    "- %s: %.2f %s%n",
+                                    "- %s\n%tF\n %s: %.2f %s%n",
+                                    rsDetalhe.getString("usu.nome"),
+                                    rsDetalhe.getDate("data_criacao"),
                                     rsDetalhe.getString("ingrediente"),
                                     rsDetalhe.getDouble("quantidade"),
                                     rsDetalhe.getString("unidade_medida")
