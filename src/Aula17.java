@@ -284,34 +284,34 @@ public class Aula17 {
                         System.out.println("Receita atualizada!");
                         Thread.sleep(1100);
                         break;
-                            case 4:
-                                System.out.println("delete");
-                                Thread.sleep(1100);
-                                System.out.println("Digite o ID que gostaria de deletar: ");
-                                int idDelete = sc.nextInt();
-                                sc.nextLine();
-                                Thread.sleep(1100);
+                    case 4:
+                        System.out.println("delete");
+                        Thread.sleep(1100);
+                        System.out.println("Digite o ID que gostaria de deletar: ");
+                        int idDelete = sc.nextInt();
+                        sc.nextLine();
+                        Thread.sleep(1100);
 
-                                String delete = " delete from *** where id =?";
-                                PreparedStatement psDelete = conexao.prepareStatement(delete);
-                                psDelete.setInt(1, idDelete);
-                                psDelete.executeUpdate();
-                                Thread.sleep(1100);
-                                System.out.println("Usuario Deletado");
-                                Thread.sleep(1100);
+                        String delete = "DELETE FROM receita WHERE id = ?";
+                        PreparedStatement psDelete = conexao.prepareStatement(delete);
+                        psDelete.setInt(1, idDelete);
+                        psDelete.executeUpdate();
+                        Thread.sleep(1100);
+                        System.out.println("Receita deletada com sucesso!");
+                        Thread.sleep(1100);
 
 
 
-                                break;
-                            case 0:
-                                Thread.sleep(1100);
-                                System.out.println("Programa Finalizado");
-                                Thread.sleep(1100);
-                                break;
-                            default:
-                                Thread.sleep(1100);
-                                System.out.println("Opção invalida!");
-                                Thread.sleep(1100);
+                        break;
+                    case 0:
+                        Thread.sleep(1100);
+                        System.out.println("Programa Finalizado");
+                        Thread.sleep(1100);
+                        break;
+                    default:
+                        Thread.sleep(1100);
+                        System.out.println("Opção invalida!");
+                        Thread.sleep(1100);
 
 
 
