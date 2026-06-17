@@ -88,7 +88,7 @@ public class Aula17 {
                     totalReceitas = rs.getInt("total");
                 }
                 System.out.printf("""
-                      ====Caderno Receitas da Famìlia Casagrande====
+                      ====Caderno Receitas da vó Nadir====
                       1 - Adicionar  Receita
                       2 - Pesquisar Receitas
                       3 - Atualizar Receita
@@ -171,7 +171,7 @@ public class Aula17 {
                     case 2 :
                         System.out.println("Receitas");
                         Thread.sleep(1000);
-                        System.out.println(" o que gostaria de cozinhar: ");
+                        System.out.println("O que gostaria de cozinhar: ");
                         String tituloid = sc.nextLine();
                         String select = """
                                 select id, titulo
@@ -226,13 +226,13 @@ public class Aula17 {
 
                             if (!receita.equals(ultima)) {
                                 System.out.println("\n=== " + receita + " ===");
+                                System.out.println("Ingredientes: \n");
                                 ultima = receita;
 
                                 modoPreparo = rsDetalhe.getString("modo_preparo");
                                 usuario = rsDetalhe.getString("nome");
                                 dataCriacao = rsDetalhe.getDate("data_criacao");
                             }
-
                             System.out.printf(
                                     "- %s: %.2f %s%n",
                                     rsDetalhe.getString("ingrediente"),
@@ -243,7 +243,7 @@ public class Aula17 {
 
                         System.out.println("\nModo de preparo:\n");
                         System.out.println(modoPreparo);
-                        System.out.printf(" \n Criado por - %s\n %tF \n\n ", usuario, dataCriacao);
+                        System.out.printf(" \nCriado por - %s - %tF \n\n ", usuario, dataCriacao);
                         Thread.sleep(1000);
                            /* while (rsDetalhe.next()) {
                                 System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
