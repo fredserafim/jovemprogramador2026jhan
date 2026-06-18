@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 import java.util.SplittableRandom;
@@ -88,7 +89,7 @@ public class Aula17 {
                     totalReceitas = rs.getInt("total");
                 }
                 System.out.printf("""
-                      ====Caderno Receitas da Famìlia Casagrande====
+                      ====Caderno Receitas da vó Nadir====
                       1 - Adicionar  Receita
                       2 - Pesquisar Receitas
                       3 - Atualizar Receita
@@ -157,9 +158,7 @@ public class Aula17 {
                         psInsert.setInt(8,ferramentas_id);
                         psInsert.setInt(9,preparo_id);
                         psInsert.setInt(10,usuarioId);
-                        var dataAtual = LocalDateTime.now();
-                        psInsert.setDate(11,
-                                new Date(dataAtual.getYear(),dataAtual.getMonth().getValue(),dataAtual.getDayOfMonth()));// pegar prof
+                        psInsert.setDate(11, Date.valueOf(LocalDate.now()));
                         psInsert.executeUpdate();
                         Thread.sleep(1000);
                         System.out.println("Receita salva com sucesso!");
@@ -171,7 +170,7 @@ public class Aula17 {
                     case 2 :
                         System.out.println("Receitas");
                         Thread.sleep(1000);
-                        System.out.println(" o que gostaria de cozinhar: ");
+                        System.out.println("O que gostaria de cozinhar: ");
                         String tituloid = sc.nextLine();
                         String select = """
                                 select id, titulo
@@ -192,8 +191,10 @@ public class Aula17 {
                             int tituloid1 = sc.nextInt();
                             sc.nextLine();
                             String  select1 = """
-                                    select re.id, re.titulo, com.dificuldade as dificuldade, cat.nome as categoria,
-                                    fer.utensilios, pre.modo_preparo, igrs.ingrediente, igr.quantidade, igrs.unidade_medida,usu.nome , re.data_criacao  from receita re
+                                    select re.id, re.titulo, com.dificuldade , cat.classificacao ,fer.utensilios,
+                                    pre.modo_preparo, igrs.ingrediente, igr.quantidade, igrs.unidade_medida,
+                                    usu.nome , re.data_criacao ,re.tempo, re.porcoes, com.dificuldade, re.tempo
+                                    from receita re
                                     join complexidade com on re.complexidade_id = com.id
                                     join categoria cat on re.categoria_id = cat.id
                                     join ferramentas fer on re.ferramentas_id = fer.id
@@ -226,13 +227,19 @@ public class Aula17 {
 
                             if (!receita.equals(ultima)) {
                                 System.out.println("\n=== " + receita + " ===");
+                                System.out.println("Ingredientes: \n");
                                 ultima = receita;
+
+                                System.out.println("Categoria: " + rsDetalhe.getString(4));
+                                System.out.println("Dificuldade: " + rsDetalhe.getString("dificuldade"));
+                                System.out.println("Tempo: " + rsDetalhe.getInt("tempo") + " min");
+                                System.out.println("Porções: " + rsDetalhe.getInt("porcoes"));
+                                System.out.println("Utensílio: " + rsDetalhe.getString("utensilios"));
 
                                 modoPreparo = rsDetalhe.getString("modo_preparo");
                                 usuario = rsDetalhe.getString("nome");
                                 dataCriacao = rsDetalhe.getDate("data_criacao");
                             }
-
                             System.out.printf(
                                     "- %s: %.2f %s%n",
                                     rsDetalhe.getString("ingrediente"),
@@ -243,7 +250,7 @@ public class Aula17 {
 
                         System.out.println("\nModo de preparo:\n");
                         System.out.println(modoPreparo);
-                        System.out.printf(" \n Criado por - %s\n %tF \n\n ", usuario, dataCriacao);
+                        System.out.printf(" \nCriado por - %s - %tF \n\n ", usuario, dataCriacao);
                         Thread.sleep(1000);
                            /* while (rsDetalhe.next()) {
                                 System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
