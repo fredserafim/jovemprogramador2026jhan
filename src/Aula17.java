@@ -161,7 +161,7 @@ public class Aula17 {
                         psInsert.setDate(11, Date.valueOf(LocalDate.now()));
                         psInsert.executeUpdate();
                         Thread.sleep(1000);
-                        System.out.println("Receita salva com sucesso!");
+                        System.out.println("Receita salva com sucesso! ");
                         Thread.sleep(1000);
 
 
