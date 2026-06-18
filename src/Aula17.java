@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 import java.util.SplittableRandom;
@@ -157,9 +158,7 @@ public class Aula17 {
                         psInsert.setInt(8,ferramentas_id);
                         psInsert.setInt(9,preparo_id);
                         psInsert.setInt(10,usuarioId);
-                        var dataAtual = LocalDateTime.now();
-                        psInsert.setDate(11,
-                                new Date(dataAtual.getYear(),dataAtual.getMonth().getValue(),dataAtual.getDayOfMonth()));// pegar prof
+                        psInsert.setDate(11, Date.valueOf(LocalDate.now()));
                         psInsert.executeUpdate();
                         Thread.sleep(1000);
                         System.out.println("Receita salva com sucesso!");
