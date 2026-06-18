@@ -158,8 +158,7 @@ public class Aula17 {
                         psInsert.setInt(8,ferramentas_id);
                         psInsert.setInt(9,preparo_id);
                         psInsert.setInt(10,usuarioId);
-                        psInsert.setDate(11,
-                                java.sql.Date.valueOf(LocalDate.now()));
+                        psInsert.setDate(11, Date.valueOf(LocalDate.now()));
                         psInsert.executeUpdate();
                         Thread.sleep(1000);
                         System.out.println("Receita salva com sucesso!");
