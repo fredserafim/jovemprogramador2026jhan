@@ -1,12 +1,9 @@
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Scanner;
-import java.util.SplittableRandom;
 
 public class Aula17 {
     public  static void main(String[] args) {
-
         Scanner sc = new Scanner(System.in);
 
         String url = "jdbc:mysql://127.0.0.1:3306/caderno_receita";
@@ -24,7 +21,6 @@ public class Aula17 {
             int usuarioId = -1;
 
             //===================================== LOGIN ===============================
-            Thread.sleep(1100);
             System.out.println("""
                   *****LOGIN*****
                   1 - Cadastrar novo usuario
@@ -100,46 +96,42 @@ public class Aula17 {
                       
                       Receitas existentes : %d
                       """,totalReceitas);
-                Thread.sleep(1000);
                 System.out.println(" Digite a opção :");
                 opcao = sc.nextInt();
                 sc.nextLine();
-                Thread.sleep(1000);
 
                 switch (opcao){
                     case 1 :
-                        Thread.sleep(1000);
                         System.out.println("Adicionar Receita");
-                        Thread.sleep(1000);
                         System.out.println("Digite o titulo: ");
                         String titulo = sc.nextLine();
-                        Thread.sleep(1000);
                         System.out.println( "Digite o id do ingrediente: ");
                         int ingredientes_id = sc.nextInt();
-                        Thread.sleep(1000);
                         System.out.println("Digite a quantidade: ");
                         double quantidade = sc.nextDouble();
-                        Thread.sleep(1000);
                         System.out.println("Digite o tempo: ");
                         int tempo = sc.nextInt();
                         sc.nextLine();
-                        Thread.sleep(1000);
-                        System.out.println("Digite qual a dificuldade( 1 facil, 2 medio, 3 dificil): ");
+                        System.out.println(""" 
+                                Digite qual a dificuldade:
+                                1 - Facil
+                                2 - Media
+                                3 - Dificil""");
                         int complexidade_id = sc.nextInt();
-                        Thread.sleep(1000);
                         System.out.println("Digite quantas pessoas serve: ");
                         int porcoes = sc.nextInt();
-                        Thread.sleep(1000);
-                        System.out.println("Qual a categoria( 1 doce, 2 salgado, 3 agridoce: ");
+                        System.out.println("""
+                                 Qual a categoria:
+                                 1 - Doce
+                                 2 - Salgado
+                                 3 - Agridoce""");
                         int categoria_id = sc.nextInt();
-                        Thread.sleep(1000);
                         System.out.println("Quais utensílios necessários: ");
                         int ferramentas_id = sc.nextInt();
-                        Thread.sleep(1000);
                         System.out.println("Modo de preparo: ");
                         int preparo_id = sc.nextInt();
-                        Thread.sleep(1000);
-                        // data criação e o suario devem ser pegos sozinhos
+
+
 
 
 
@@ -160,16 +152,13 @@ public class Aula17 {
                         psInsert.setInt(10,usuarioId);
                         psInsert.setDate(11, Date.valueOf(LocalDate.now()));
                         psInsert.executeUpdate();
-                        Thread.sleep(1000);
                         System.out.println("Receita salva com sucesso! ");
-                        Thread.sleep(1000);
 
 
 
                         break;
                     case 2 :
                         System.out.println("Receitas");
-                        Thread.sleep(1000);
                         System.out.println("O que gostaria de cozinhar: ");
                         String tituloid = sc.nextLine();
                         String select = """
@@ -180,7 +169,6 @@ public class Aula17 {
                         PreparedStatement psSelect = conexao.prepareStatement(select);
                         psSelect.setString(1,"%" +  tituloid + "%" );
                         ResultSet rsReceitas = psSelect.executeQuery();
-                        Thread.sleep(1000);
                         System.out.println("Listas de Receitas");
                         while(rsReceitas.next()) {
                             System.out.printf("%d - %s \n",
@@ -210,7 +198,6 @@ public class Aula17 {
                             PreparedStatement psSelect2 = conexao.prepareStatement(select1);
                             psSelect2.setInt(1, tituloid1);
                             ResultSet rsDetalhe = psSelect2.executeQuery();
-                            Thread.sleep(1000);
                             System.out.println("Lista");
 
 
@@ -221,7 +208,7 @@ public class Aula17 {
 
 
                         while (rsDetalhe.next()) {
-                            Thread.sleep(700);
+
 
                             String receita = rsDetalhe.getString("titulo");
 
@@ -234,59 +221,36 @@ public class Aula17 {
                                 System.out.println("Porções: " + rsDetalhe.getInt("porcoes"));
                                 System.out.println("Utensílio: " + rsDetalhe.getString("utensilios"));
                                 System.out.println("\nIngredientes:");
-                                Thread.sleep(700);
+
 
                                 modoPreparo = rsDetalhe.getString("modo_preparo");
                                 usuario = rsDetalhe.getString("nome");
                                 dataCriacao = rsDetalhe.getDate("data_criacao");
                             }
-                            Thread.sleep(700);
+
                             System.out.printf(
                                     "%s - %.2f%s%n",
                                     rsDetalhe.getString("ingrediente"),
                                     rsDetalhe.getDouble("quantidade"),
                                     rsDetalhe.getString("unidade_medida")
                             );
-                        }Thread.sleep(700);
+                        }
 
                         System.out.println("\nModo de preparo:\n");
-                        Thread.sleep(700);
                         System.out.println(modoPreparo);
-                        Thread.sleep(700);
                         System.out.printf(" \nCriado por - %s - %tF \n", usuario, dataCriacao);
-                        Thread.sleep(1000);
-                           /* while (rsDetalhe.next()) {
-                                System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
-                                        rsDetalhe.getString("titulo"),
-                                        rsDetalhe.getString("dificuldade"),
-                                        rsDetalhe.getString("categoria"),
-                                        rsDetalhe.getString("utensilios"),
-                                        rsDetalhe.getString("modo_preparo"),
-                                        rsDetalhe.getString("ingrediente"),
-                                        rsDetalhe.getDouble("quantidade"),
-                                        rsDetalhe.getString("unidade_medida")
 
-
-                                );
-
-
-                            }*/
-                            Thread.sleep(1100);
                             break;
                     case 3:
                         System.out.println("update");
-                        Thread.sleep(1100);
                         System.out.println("Digite o ID para atualizar: ");
                         int idUpdate = sc.nextInt();
                         sc.nextLine();
-                        Thread.sleep(1100);
                         System.out.println("Novo título: ");
                         String tituloUpdate = sc.nextLine();
-                        Thread.sleep(1100);
                         System.out.println("Novo tempo de preparo (minutos): ");
                         int tempoUpdate = sc.nextInt();
                         sc.nextLine();
-                        Thread.sleep(1100);
 
                         String updade = "UPDATE receita SET titulo = ?, tempo = ? WHERE id = ?";
 
@@ -297,38 +261,28 @@ public class Aula17 {
                         psUpdate.setInt(3, idUpdate);
 
                         psUpdate.executeUpdate();
-                        Thread.sleep(1100);
                         System.out.println("Receita atualizada!");
-                        Thread.sleep(1100);
                         break;
                     case 4:
                         System.out.println("delete");
-                        Thread.sleep(1100);
                         System.out.println("Digite o ID que gostaria de deletar: ");
                         int idDelete = sc.nextInt();
                         sc.nextLine();
-                        Thread.sleep(1100);
 
                         String delete = "DELETE FROM receita WHERE id = ?";
                         PreparedStatement psDelete = conexao.prepareStatement(delete);
                         psDelete.setInt(1, idDelete);
                         psDelete.executeUpdate();
-                        Thread.sleep(1100);
                         System.out.println("Receita deletada com sucesso!");
-                        Thread.sleep(1100);
 
 
 
                         break;
                     case 0:
-                        Thread.sleep(1100);
                         System.out.println("Programa Finalizado");
-                        Thread.sleep(1100);
                         break;
                     default:
-                        Thread.sleep(1100);
                         System.out.println("Opção invalida!");
-                        Thread.sleep(1100);
 
 
 
