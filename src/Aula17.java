@@ -221,36 +221,39 @@ public class Aula17 {
 
 
                         while (rsDetalhe.next()) {
-                            Thread.sleep(1000);
+                            Thread.sleep(700);
 
                             String receita = rsDetalhe.getString("titulo");
 
                             if (!receita.equals(ultima)) {
                                 System.out.println("\n=== " + receita + " ===");
-                                System.out.println("Ingredientes: \n");
                                 ultima = receita;
-
                                 System.out.println("Categoria: " + rsDetalhe.getString(4));
                                 System.out.println("Dificuldade: " + rsDetalhe.getString("dificuldade"));
                                 System.out.println("Tempo: " + rsDetalhe.getInt("tempo") + " min");
                                 System.out.println("Porções: " + rsDetalhe.getInt("porcoes"));
                                 System.out.println("Utensílio: " + rsDetalhe.getString("utensilios"));
+                                System.out.println("\nIngredientes:");
+                                Thread.sleep(700);
 
                                 modoPreparo = rsDetalhe.getString("modo_preparo");
                                 usuario = rsDetalhe.getString("nome");
                                 dataCriacao = rsDetalhe.getDate("data_criacao");
                             }
+                            Thread.sleep(700);
                             System.out.printf(
-                                    "- %s: %.2f %s%n",
+                                    "%s - %.2f%s%n",
                                     rsDetalhe.getString("ingrediente"),
                                     rsDetalhe.getDouble("quantidade"),
                                     rsDetalhe.getString("unidade_medida")
                             );
-                        }
+                        }Thread.sleep(700);
 
                         System.out.println("\nModo de preparo:\n");
+                        Thread.sleep(700);
                         System.out.println(modoPreparo);
-                        System.out.printf(" \nCriado por - %s - %tF \n\n ", usuario, dataCriacao);
+                        Thread.sleep(700);
+                        System.out.printf(" \nCriado por - %s - %tF \n", usuario, dataCriacao);
                         Thread.sleep(1000);
                            /* while (rsDetalhe.next()) {
                                 System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
