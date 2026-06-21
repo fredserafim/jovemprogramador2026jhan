@@ -26,16 +26,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `caderno_receita`.`ferramentas`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `caderno_receita`.`ferramentas` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `utensilios` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `caderno_receita`.`preparo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `caderno_receita`.`preparo` (
@@ -62,7 +52,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `caderno_receita`.`categoria` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(45) NOT NULL,
   `classificacao` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -88,21 +77,14 @@ CREATE TABLE IF NOT EXISTS `caderno_receita`.`receita` (
   `complexidade_id` INT NOT NULL,
   `porcoes` INT NOT NULL,
   `categoria_id` INT NOT NULL,
-  `ferramentas_id` INT NOT NULL,
   `preparo_id` INT NOT NULL,
   `usuario_id` INT NOT NULL,
   `data_criacao` DATE NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_receita_ferramentas_idx` (`ferramentas_id` ASC) ,
   INDEX `fk_receita_preparo1_idx` (`preparo_id` ASC) ,
   INDEX `fk_receita_usuario1_idx` (`usuario_id` ASC) ,
   INDEX `fk_receita_categoria1_idx` (`categoria_id` ASC) ,
   INDEX `fk_receita_complexidade1_idx` (`complexidade_id` ASC) ,
-  CONSTRAINT `fk_receita_ferramentas`
-    FOREIGN KEY (`ferramentas_id`)
-    REFERENCES `caderno_receita`.`ferramentas` (`id`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE,
   CONSTRAINT `fk_receita_preparo1`
     FOREIGN KEY (`preparo_id`)
     REFERENCES `caderno_receita`.`preparo` (`id`)
@@ -127,6 +109,17 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `caderno_receita`.`ferramentas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `caderno_receita`.`ferramentas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `utensilios` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `utensilios_UNIQUE` (`utensilios` ASC) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `caderno_receita`.`ingrediente_receita`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `caderno_receita`.`ingrediente_receita` (
@@ -146,6 +139,29 @@ CREATE TABLE IF NOT EXISTS `caderno_receita`.`ingrediente_receita` (
   CONSTRAINT `fk_ingrediente_receita_ingredientes1`
     FOREIGN KEY (`ingredientes_id`)
     REFERENCES `caderno_receita`.`ingredientes` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `caderno_receita`.`ferramenta_receita`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `caderno_receita`.`ferramenta_receita` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `ferramentas_id` INT NOT NULL,
+  `receita_id` INT NOT NULL,
+  INDEX `fk_Ferramentas_receitas_ferramentas1_idx` (`ferramentas_id` ASC) ,
+  INDEX `fk_Ferramentas_receitas_receita1_idx` (`receita_id` ASC) ,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_Ferramentas_receitas_ferramentas1`
+    FOREIGN KEY (`ferramentas_id`)
+    REFERENCES `caderno_receita`.`ferramentas` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Ferramentas_receitas_receita1`
+    FOREIGN KEY (`receita_id`)
+    REFERENCES `caderno_receita`.`receita` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
