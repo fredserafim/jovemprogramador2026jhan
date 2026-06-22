@@ -463,14 +463,39 @@ public class Aula17 {
                         break;
                     case 4:
                         System.out.println("delete");
+
+                        String selectReceitasDelete = "SELECT id, titulo, tempo FROM receita";
+                        Statement stmtListDelete = conexao.createStatement();
+                        ResultSet rsListDelete = stmtListDelete.executeQuery(selectReceitasDelete);
+
+                        System.out.println("Receitas cadastradas:");
+                        while (rsListDelete.next()) {
+                            System.out.println("ID: " + rsListDelete.getInt("id")
+                                    + " | Título: " + rsListDelete.getString("titulo")
+                                    + " | Tempo: " + rsListDelete.getInt("tempo") + " min");
+                        }
+                        rsListDelete.close();
+                        stmtListDelete.close();
+
                         System.out.println("Digite o ID que gostaria de deletar: ");
                         int idDelete = sc.nextInt();
                         sc.nextLine();
+
+                        String deleteFerramentaReceita = "DELETE FROM ferramenta_receita WHERE receita_id = ?";
+                        PreparedStatement psDeleteFerramentaReceita = conexao.prepareStatement(deleteFerramentaReceita);
+                        psDeleteFerramentaReceita.setInt(1, idDelete);
+                        psDeleteFerramentaReceita.executeUpdate();
+
+                        String deleteIngredienteReceita = "DELETE FROM ingrediente_receita WHERE receita_id = ?";
+                        PreparedStatement psDeleteIngredienteReceita = conexao.prepareStatement(deleteIngredienteReceita);
+                        psDeleteIngredienteReceita.setInt(1, idDelete);
+                        psDeleteIngredienteReceita.executeUpdate();
 
                         String delete = "DELETE FROM receita WHERE id = ?";
                         PreparedStatement psDelete = conexao.prepareStatement(delete);
                         psDelete.setInt(1, idDelete);
                         psDelete.executeUpdate();
+
                         System.out.println("Receita deletada com sucesso!");
 
 
