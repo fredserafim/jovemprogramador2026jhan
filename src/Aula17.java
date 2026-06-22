@@ -1,12 +1,9 @@
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Scanner;
-import java.util.SplittableRandom;
 
 public class Aula17 {
     public  static void main(String[] args) {
-
         Scanner sc = new Scanner(System.in);
 
         String url = "jdbc:mysql://127.0.0.1:3306/caderno_receita";
@@ -21,10 +18,9 @@ public class Aula17 {
             System.out.println("Conectado!");
 
 
-            int usuarioId = -1;
+            int usuarioId = 0;
 
             //===================================== LOGIN ===============================
-            Thread.sleep(1100);
             System.out.println("""
                   *****LOGIN*****
                   1 - Cadastrar novo usuario
@@ -100,53 +96,232 @@ public class Aula17 {
                       
                       Receitas existentes : %d
                       """,totalReceitas);
-                Thread.sleep(1000);
                 System.out.println(" Digite a opção :");
                 opcao = sc.nextInt();
                 sc.nextLine();
-                Thread.sleep(1000);
 
                 switch (opcao){
-                    case 1 :
-                        Thread.sleep(1000);
+                    case 1:
+
                         System.out.println("Adicionar Receita");
-                        Thread.sleep(1000);
+
                         System.out.println("Digite o titulo: ");
                         String titulo = sc.nextLine();
-                        Thread.sleep(1000);
+
+                        System.out.println("Digite o tempo: ");
+                        int tempo = sc.nextInt();
+
+                        System.out.println("""
+                                     Dificuldade:
+                                     1 - Facil
+                                     2 - Media
+                                     3 - Dificil
+                                     """);
+                        int complexidade_id = sc.nextInt();
+
+                        System.out.println("Digite quantas pessoas serve: ");
+                        int porcoes = sc.nextInt();
+
+                        System.out.println("""
+                                 Categoria:
+                                 1 - Doce
+                                 2 - Salgado
+                                 3 - Agridoce
+                                 """);
+                        int categoria_id = sc.nextInt();
+                        sc.nextLine();
+
+                         // modo preparo
+                        System.out.println("Modo de preparo: ");
+                        String modoPreparo = sc.nextLine();
+
+                        String sqlPreparo = "insert into preparo (modo_preparo, tempo_preparo) VALUES (?, ?)";
+                        PreparedStatement psPreparo = conexao.prepareStatement(sqlPreparo, Statement.RETURN_GENERATED_KEYS);
+                        psPreparo.setString(1, modoPreparo);
+                        psPreparo.setInt(2, tempo);
+                        psPreparo.executeUpdate();
+
+                        ResultSet rsPrep = psPreparo.getGeneratedKeys();
+                        rsPrep.next();
+                        int preparo_id = rsPrep.getInt(1);
+
+                        String sqlReceita = (" insert into receita(titulo, tempo, complexidade_id, porcoes, categoria_id, preparo_id, usuario_id, data_criacao)" +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+                        PreparedStatement psReceita = conexao.prepareStatement(sqlReceita, Statement.RETURN_GENERATED_KEYS);
+
+                        psReceita.setString(1, titulo);
+                        psReceita.setInt(2, tempo);
+                        psReceita.setInt(3, complexidade_id);
+                        psReceita.setInt(4, porcoes);
+                        psReceita.setInt(5, categoria_id);
+                        psReceita.setInt(6, preparo_id);
+                        psReceita.setInt(7, usuarioId);
+                        psReceita.setDate(8, Date.valueOf(LocalDate.now()));
+
+                        psReceita.executeUpdate();
+
+                        ResultSet rsRec = psReceita.getGeneratedKeys();
+                        rsRec.next();
+                        int receita_id = rsRec.getInt(1);
+                        // ingredientes
+
+                        int continuarIng = 1;
+                        while (continuarIng == 1) {
+
+                            System.out.println("Ingrediente: ");
+                            String nomeIng = sc.nextLine().trim().toLowerCase();
+
+                            System.out.println("Quantidade: ");
+                            double qtd = sc.nextDouble();
+                            sc.nextLine();
+
+                            System.out.println("Qual unidade de pedida : ");
+                            String unidadeMedida = sc.nextLine().trim().toLowerCase();
+
+                            String sqlBuscaIng = ("select id from ingredientes where lower(ingrediente) = ?;");
+                            PreparedStatement psBuscaIng = conexao.prepareStatement(sqlBuscaIng);
+                            psBuscaIng.setString(1, nomeIng);
+                            ResultSet rsIng = psBuscaIng.executeQuery();
+
+                            int ingrediente_id;
+                            if (rsIng.next()) {
+                                ingrediente_id = rsIng.getInt("id");
+                            } else {
+                                String sqlInsertIng = ("insert into ingredientes (ingrediente, unidade_medida) values (?, ?);");
+
+                                PreparedStatement psInsertIng = conexao.prepareStatement(sqlInsertIng, Statement.RETURN_GENERATED_KEYS);
+                                psInsertIng.setString(1, nomeIng);
+                                psInsertIng.setString(2, unidadeMedida);
+                                psInsertIng.executeUpdate();
+
+                                ResultSet rsKey = psInsertIng.getGeneratedKeys();
+                                rsKey.next();
+                                ingrediente_id = rsKey.getInt(1);
+                            }
+
+                            String sqlRelIng = ("insert into ingrediente_receita (receita_id, ingredientes_id, quantidade, observacao) values (?, ?, ?, '');");
+                            PreparedStatement psRelIng = conexao.prepareStatement(sqlRelIng);
+                            psRelIng.setInt(1, receita_id);
+                            psRelIng.setInt(2, ingrediente_id);
+                            psRelIng.setDouble(3, qtd);
+                            psRelIng.executeUpdate();
+
+                            System.out.println("""
+                                    Gostaria de acrescentar mais algum ingrediente?
+                                    1 - Sim / 2 - Não""");
+                            continuarIng = sc.nextInt();
+                            sc.nextLine();
+                        }
+
+                    //utensilios
+                        int continuarUt = 1;
+                        while (continuarUt == 1) {
+
+                            System.out.println("Utensílio: ");
+                            String nomeUt = sc.nextLine().trim().toLowerCase();
+
+                            String sqlBuscaUt = ("select id from ferramentas where lower(utensilios) = ? ;");
+                            PreparedStatement psBuscaUt = conexao.prepareStatement(sqlBuscaUt);
+                            psBuscaUt.setString(1, nomeUt);
+                            ResultSet rsUt = psBuscaUt.executeQuery();
+
+                            int ferramentas_id;
+                            if (rsUt.next()) {
+                                ferramentas_id = rsUt.getInt("id");
+                            } else {
+                                String sqlInsertUt = ("insert into ferramentas (utensilios) values (?) ;");
+
+                                PreparedStatement psInsertUt = conexao.prepareStatement(sqlInsertUt, Statement.RETURN_GENERATED_KEYS);
+                                psInsertUt.setString(1, nomeUt);
+                                psInsertUt.executeUpdate();
+
+                                ResultSet rsKey = psInsertUt.getGeneratedKeys();
+                                rsKey.next();
+                                ferramentas_id = rsKey.getInt(1);
+                            }
+
+                            String sqlRelUt =("insert into ferramenta_receita (receita_id, ferramentas_id) values (?, ?);");
+                            PreparedStatement psRelUt = conexao.prepareStatement(sqlRelUt);
+                            psRelUt.setInt(1, receita_id);
+                            psRelUt.setInt(2, ferramentas_id);
+                            psRelUt.executeUpdate();
+
+                            System.out.println("""
+                                    Gostaria de acrescentar mais algum utensilio?
+                                    1 - Sim / 2 - Não""");
+                            continuarUt = sc.nextInt();
+                            sc.nextLine();
+                        }
+
+                        System.out.printf("""
+                              =================================
+                                RECEITA CADASTRADA COM SUCESSO
+                              =================================
+                             
+                             Título:  %s
+                             Tempo:   %d minutos
+                             Porções: %d
+                             """, titulo,tempo,porcoes);
+
+                        break;
+                    /*case 1 :
+                        System.out.println("Adicionar Receita");
+                        System.out.println("Digite o titulo: ");
+                        String titulo = sc.nextLine();
                         System.out.println( "Digite o id do ingrediente: ");
                         int ingredientes_id = sc.nextInt();
-                        Thread.sleep(1000);
                         System.out.println("Digite a quantidade: ");
                         double quantidade = sc.nextDouble();
-                        Thread.sleep(1000);
                         System.out.println("Digite o tempo: ");
                         int tempo = sc.nextInt();
                         sc.nextLine();
-                        Thread.sleep(1000);
-                        System.out.println("Digite qual a dificuldade( 1 facil, 2 medio, 3 dificil): ");
+                        System.out.println(""" 
+                                Digite qual a dificuldade:
+                                1 - Facil
+                                2 - Media
+                                3 - Dificil""");
                         int complexidade_id = sc.nextInt();
-                        Thread.sleep(1000);
                         System.out.println("Digite quantas pessoas serve: ");
                         int porcoes = sc.nextInt();
-                        Thread.sleep(1000);
-                        System.out.println("Qual a categoria( 1 doce, 2 salgado, 3 agridoce: ");
+                        System.out.println("""
+                                 Qual a categoria:
+                                 1 - Doce
+                                 2 - Salgado
+                                 3 - Agridoce""");
                         int categoria_id = sc.nextInt();
-                        Thread.sleep(1000);
+                        int continuarUt = 1;
+                        while (continuarUt == 1) {
+                            System.out.println("Utensílio: ");
+                            String nome = sc.nextLine();
+                            int ferramenta_id = buscarOuCriarFerramenta(conexao, nome);
+                            String sql = ("""INSERT INTO ferramenta_receita (receita_id, ferramenta_id)
+                                            VALUES (?, ?)""");
+
+                            PreparedStatement ps = conexao.prepareStatement(sql);
+                            ps.setInt(1, receita_id);
+                            ps.setInt(2, ferramenta_id);
+                            ps.executeUpdate();
+
+                            System.out.println("Deseja adicionar outro utensílio?");
+                            System.out.println("1 - Sim");
+                            System.out.println("2 - Não");
+
+                            continuarUt = sc.nextInt();
+                            sc.nextLine();
+                        }
                         System.out.println("Quais utensílios necessários: ");
-                        int ferramentas_id = sc.nextInt();
-                        Thread.sleep(1000);
+                        String utensilio = sc.nextLine().trim().toLowerCase();
                         System.out.println("Modo de preparo: ");
                         int preparo_id = sc.nextInt();
-                        Thread.sleep(1000);
-                        // data criação e o suario devem ser pegos sozinhos
 
 
 
 
 
-                        String insert = "insert into  ( titulo, ingredientes_id, quantidade, tempo, complexidade_id,porcoes, categoria_id," +
-                                "ferramentas_id, preparo_id, usuario_id, data_criacao) values (?,?,?,?,?,?,?,?,?,?,?)";
+
+
+                        String insert = "select finsert into  ( titulo, ingredientes_id, quantidade, tempo, complexidade_id,porcoes, categoria_id," +
+                                "ferramentas.utensilio, preparo_id, usuario_id, data_criacao) values (?,?,?,?,?,?,?,?,?,?,?)";
                         PreparedStatement psInsert = conexao.prepareStatement(insert);
                         psInsert.setString(1,titulo);
                         psInsert.setInt(2,ingredientes_id);
@@ -155,21 +330,126 @@ public class Aula17 {
                         psInsert.setInt(5,complexidade_id);
                         psInsert.setInt(6,porcoes);
                         psInsert.setInt(7,categoria_id);
-                        psInsert.setInt(8,ferramentas_id);
+                        psInsert.setString(8,utensilio);
                         psInsert.setInt(9,preparo_id);
                         psInsert.setInt(10,usuarioId);
                         psInsert.setDate(11, Date.valueOf(LocalDate.now()));
                         psInsert.executeUpdate();
-                        Thread.sleep(1000);
                         System.out.println("Receita salva com sucesso! ");
-                        Thread.sleep(1000);
 
 
+
+                        break;*/
+                    case 2:
+                        System.out.println("Receitas");
+                        System.out.println("O que gostaria de cozinhar: ");
+
+                        String tituloid = sc.nextLine();
+
+                        String select = ("""
+                                            select id, titulo from receita
+                                            where titulo like ?
+                                            order by id asc;
+                                
+                                           """);
+                        PreparedStatement psSelect = conexao.prepareStatement(select);
+                        psSelect.setString(1, "%" + tituloid + "%");
+
+                        ResultSet rsReceitas = psSelect.executeQuery();
+
+                        System.out.println("Lista de Receitas");
+
+                        while (rsReceitas.next()) {
+                            System.out.printf("%d - %s \n",
+                                    rsReceitas.getInt("id"),
+                                    rsReceitas.getString("titulo")
+                            );
+                        }
+
+                        System.out.println("Qual receita deseja (digite o ID): ");
+                        int tituloid1 = sc.nextInt();
+                        sc.nextLine();
+
+                        // receitas
+                        String selectReceita = """
+                                               select re.titulo,com.dificuldade,cat.classificacao,re.tempo,re.porcoes,pre.modo_preparo,usu.nome,re.data_criacao
+                                               from receita re
+                                               join complexidade com on re.complexidade_id = com.id
+                                               join categoria cat on re.categoria_id = cat.id
+                                               join preparo pre on re.preparo_id = pre.id
+                                               join usuario usu on re.usuario_id = usu.id
+                                               where re.id = ?;
+                                               """;
+
+                        PreparedStatement psSelectReceita = conexao.prepareStatement(selectReceita);
+                        psSelectReceita.setInt(1, tituloid1);
+
+                        ResultSet rsReceita = psSelectReceita.executeQuery();
+
+                        if (!rsReceita.next()) {
+                            System.out.println("Receita não encontrada.");
+                            break;
+                        }
+
+                        System.out.println("\n=== " + rsReceita.getString("titulo") + " ===");
+                        System.out.println("Categoria: " + rsReceita.getString("classificacao"));
+                        System.out.println("Dificuldade: " + rsReceita.getString("dificuldade"));
+                        System.out.println("Tempo: " + rsReceita.getInt("tempo") + " min");
+                        System.out.println("Porções: " + rsReceita.getInt("porcoes"));
+
+                        // ingredientes
+                        String selectIngredientes = """
+                                                    select igrs.ingrediente,igr.quantidade,igrs.unidade_medida
+                                                    from ingrediente_receita igr
+                                                    join ingredientes igrs on igr.ingredientes_id = igrs.id
+                                                    where igr.receita_id = ?;
+                                                    """;
+
+                        PreparedStatement psIng = conexao.prepareStatement(selectIngredientes);
+                        psIng.setInt(1, tituloid1);
+
+                        ResultSet rsIng = psIng.executeQuery();
+
+                        System.out.println("\nIngredientes:");
+
+                        while (rsIng.next()) {
+                            System.out.printf("%s - %.2f %s%n",
+                                    rsIng.getString("ingrediente"),
+                                    rsIng.getDouble("quantidade"),
+                                    rsIng.getString("unidade_medida")
+                            );
+                        }
+
+                        // utensilios
+                        String selectUtensilios = """
+                                                  select fer.utensilios
+                                                  from ferramenta_receita fr
+                                                  join ferramentas fer on fer.id = fr.ferramentas_id
+                                                  where fr.receita_id = ?;
+                                                  """;
+
+                        PreparedStatement psUt = conexao.prepareStatement(selectUtensilios);
+                        psUt.setInt(1, tituloid1);
+
+                        ResultSet rsUt = psUt.executeQuery();
+
+                        System.out.println("\nUtensílios:");
+
+                        while (rsUt.next()) {
+                            System.out.println("- " + rsUt.getString("utensilios"));
+                        }
+
+                        //modo preparo
+                        System.out.println("\nModo de preparo:\n");
+                        System.out.println(rsReceita.getString("modo_preparo"));
+
+                        System.out.printf("\nCriado por - %s - %tF \n",
+                                rsReceita.getString("nome"),
+                                rsReceita.getDate("data_criacao"));
 
                         break;
-                    case 2 :
+                    /*case 2 :
                         System.out.println("Receitas");
-                        Thread.sleep(1000);
                         System.out.println("O que gostaria de cozinhar: ");
                         String tituloid = sc.nextLine();
                         String select = """
@@ -180,7 +460,6 @@ public class Aula17 {
                         PreparedStatement psSelect = conexao.prepareStatement(select);
                         psSelect.setString(1,"%" +  tituloid + "%" );
                         ResultSet rsReceitas = psSelect.executeQuery();
-                        Thread.sleep(1000);
                         System.out.println("Listas de Receitas");
                         while(rsReceitas.next()) {
                             System.out.printf("%d - %s \n",
@@ -189,6 +468,7 @@ public class Aula17 {
                             );}
                             System.out.println("Qual receita deseja( digite o ID): ");
                             int tituloid1 = sc.nextInt();
+
                             sc.nextLine();
                             String  select1 = """
                                     select re.id, re.titulo, com.dificuldade , cat.classificacao ,fer.utensilios,
@@ -197,7 +477,8 @@ public class Aula17 {
                                     from receita re
                                     join complexidade com on re.complexidade_id = com.id
                                     join categoria cat on re.categoria_id = cat.id
-                                    join ferramentas fer on re.ferramentas_id = fer.id
+                                    join ferramenta_receita fr on fr.receita_id = re.id
+                                    join ferramentas fer on fer.id = fr.ferramentas_id
                                     join preparo pre on re.preparo_id = pre.id
                                     join usuario usu on re.usuario_id = usu.id
                                     join ingrediente_receita igr on igr.receita_id = re.id
@@ -210,38 +491,42 @@ public class Aula17 {
                             PreparedStatement psSelect2 = conexao.prepareStatement(select1);
                             psSelect2.setInt(1, tituloid1);
                             ResultSet rsDetalhe = psSelect2.executeQuery();
-                            Thread.sleep(1000);
+                                    if (!rsDetalhe.isBeforeFirst()) {
+                                        System.out.println("Receita não encontrada.");
+                                        break;
+                                         }
                             System.out.println("Lista");
 
 
                         String ultima = "";
-                        String modoPreparo = "";
+                        String modoPreparo2 = "";
                         String usuario = "";
                         Date dataCriacao = null;
 
 
                         while (rsDetalhe.next()) {
-                            Thread.sleep(1000);
+
 
                             String receita = rsDetalhe.getString("titulo");
 
                             if (!receita.equals(ultima)) {
                                 System.out.println("\n=== " + receita + " ===");
-                                System.out.println("Ingredientes: \n");
                                 ultima = receita;
-
                                 System.out.println("Categoria: " + rsDetalhe.getString(4));
                                 System.out.println("Dificuldade: " + rsDetalhe.getString("dificuldade"));
                                 System.out.println("Tempo: " + rsDetalhe.getInt("tempo") + " min");
                                 System.out.println("Porções: " + rsDetalhe.getInt("porcoes"));
                                 System.out.println("Utensílio: " + rsDetalhe.getString("utensilios"));
+                                System.out.println("\nIngredientes:");
 
-                                modoPreparo = rsDetalhe.getString("modo_preparo");
+
+                                modoPreparo2 = rsDetalhe.getString("modo_preparo");
                                 usuario = rsDetalhe.getString("nome");
                                 dataCriacao = rsDetalhe.getDate("data_criacao");
                             }
+
                             System.out.printf(
-                                    "- %s: %.2f %s%n",
+                                    "%s - %.2f%s%n",
                                     rsDetalhe.getString("ingrediente"),
                                     rsDetalhe.getDouble("quantidade"),
                                     rsDetalhe.getString("unidade_medida")
@@ -249,41 +534,34 @@ public class Aula17 {
                         }
 
                         System.out.println("\nModo de preparo:\n");
-                        System.out.println(modoPreparo);
-                        System.out.printf(" \nCriado por - %s - %tF \n\n ", usuario, dataCriacao);
-                        Thread.sleep(1000);
-                           /* while (rsDetalhe.next()) {
-                                System.out.printf("%s - %s - %s - %s - %s - %s - %.2f - %s \n",
-                                        rsDetalhe.getString("titulo"),
-                                        rsDetalhe.getString("dificuldade"),
-                                        rsDetalhe.getString("categoria"),
-                                        rsDetalhe.getString("utensilios"),
-                                        rsDetalhe.getString("modo_preparo"),
-                                        rsDetalhe.getString("ingrediente"),
-                                        rsDetalhe.getDouble("quantidade"),
-                                        rsDetalhe.getString("unidade_medida")
+                        System.out.println(modoPreparo2);
+                        System.out.printf(" \nCriado por - %s - %tF \n", usuario, dataCriacao);
 
-
-                                );
-
-
-                            }*/
-                            Thread.sleep(1100);
-                            break;
+                            break;*/
                     case 3:
                         System.out.println("update");
-                        Thread.sleep(1100);
+
+                        String selectReceitas = "SELECT id, titulo, tempo FROM receita";
+                        Statement stmtList = conexao.createStatement();
+                        ResultSet rsList = stmtList.executeQuery(selectReceitas);
+
+                        System.out.println("Receitas cadastradas:");
+                        while (rsList.next()) {
+                            System.out.println("ID: " + rsList.getInt("id")
+                                    + " | Título: " + rsList.getString("titulo")
+                                    + " | Tempo: " + rsList.getInt("tempo") + " min");
+                        }
+                        rsList.close();
+                        stmtList.close();
+
                         System.out.println("Digite o ID para atualizar: ");
                         int idUpdate = sc.nextInt();
                         sc.nextLine();
-                        Thread.sleep(1100);
                         System.out.println("Novo título: ");
                         String tituloUpdate = sc.nextLine();
-                        Thread.sleep(1100);
                         System.out.println("Novo tempo de preparo (minutos): ");
                         int tempoUpdate = sc.nextInt();
                         sc.nextLine();
-                        Thread.sleep(1100);
 
                         String updade = "UPDATE receita SET titulo = ?, tempo = ? WHERE id = ?";
 
@@ -292,40 +570,54 @@ public class Aula17 {
                         psUpdate.setString(1, tituloUpdate);
                         psUpdate.setInt(2, tempoUpdate);
                         psUpdate.setInt(3, idUpdate);
-
                         psUpdate.executeUpdate();
-                        Thread.sleep(1100);
                         System.out.println("Receita atualizada!");
-                        Thread.sleep(1100);
                         break;
                     case 4:
                         System.out.println("delete");
-                        Thread.sleep(1100);
+
+                        String selectReceitasDelete = "SELECT id, titulo, tempo FROM receita";
+                        Statement stmtListDelete = conexao.createStatement();
+                        ResultSet rsListDelete = stmtListDelete.executeQuery(selectReceitasDelete);
+
+                        System.out.println("Receitas cadastradas:");
+                        while (rsListDelete.next()) {
+                            System.out.println("ID: " + rsListDelete.getInt("id")
+                                    + " | Título: " + rsListDelete.getString("titulo")
+                                    + " | Tempo: " + rsListDelete.getInt("tempo") + " min");
+                        }
+                        rsListDelete.close();
+                        stmtListDelete.close();
+
                         System.out.println("Digite o ID que gostaria de deletar: ");
                         int idDelete = sc.nextInt();
                         sc.nextLine();
-                        Thread.sleep(1100);
+
+                        String deleteFerramentaReceita = "DELETE FROM ferramenta_receita WHERE receita_id = ?";
+                        PreparedStatement psDeleteFerramentaReceita = conexao.prepareStatement(deleteFerramentaReceita);
+                        psDeleteFerramentaReceita.setInt(1, idDelete);
+                        psDeleteFerramentaReceita.executeUpdate();
+
+                        String deleteIngredienteReceita = "DELETE FROM ingrediente_receita WHERE receita_id = ?";
+                        PreparedStatement psDeleteIngredienteReceita = conexao.prepareStatement(deleteIngredienteReceita);
+                        psDeleteIngredienteReceita.setInt(1, idDelete);
+                        psDeleteIngredienteReceita.executeUpdate();
 
                         String delete = "DELETE FROM receita WHERE id = ?";
                         PreparedStatement psDelete = conexao.prepareStatement(delete);
                         psDelete.setInt(1, idDelete);
                         psDelete.executeUpdate();
-                        Thread.sleep(1100);
+
                         System.out.println("Receita deletada com sucesso!");
-                        Thread.sleep(1100);
 
 
 
                         break;
                     case 0:
-                        Thread.sleep(1100);
                         System.out.println("Programa Finalizado");
-                        Thread.sleep(1100);
                         break;
                     default:
-                        Thread.sleep(1100);
                         System.out.println("Opção invalida!");
-                        Thread.sleep(1100);
 
 
 
