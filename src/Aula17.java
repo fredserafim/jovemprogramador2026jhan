@@ -428,6 +428,20 @@ public class Aula17 {
                             break;
                     case 3:
                         System.out.println("update");
+
+                        String selectReceitas = "SELECT id, titulo, tempo FROM receita";
+                        Statement stmtList = conexao.createStatement();
+                        ResultSet rsList = stmtList.executeQuery(selectReceitas);
+
+                        System.out.println("Receitas cadastradas:");
+                        while (rsList.next()) {
+                            System.out.println("ID: " + rsList.getInt("id")
+                                    + " | Título: " + rsList.getString("titulo")
+                                    + " | Tempo: " + rsList.getInt("tempo") + " min");
+                        }
+                        rsList.close();
+                        stmtList.close();
+
                         System.out.println("Digite o ID para atualizar: ");
                         int idUpdate = sc.nextInt();
                         sc.nextLine();
@@ -444,7 +458,6 @@ public class Aula17 {
                         psUpdate.setString(1, tituloUpdate);
                         psUpdate.setInt(2, tempoUpdate);
                         psUpdate.setInt(3, idUpdate);
-
                         psUpdate.executeUpdate();
                         System.out.println("Receita atualizada!");
                         break;
