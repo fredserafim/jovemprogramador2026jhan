@@ -540,6 +540,20 @@ public class Aula17 {
                             break;*/
                     case 3:
                         System.out.println("update");
+
+                        String selectReceitas = "SELECT id, titulo, tempo FROM receita";
+                        Statement stmtList = conexao.createStatement();
+                        ResultSet rsList = stmtList.executeQuery(selectReceitas);
+
+                        System.out.println("Receitas cadastradas:");
+                        while (rsList.next()) {
+                            System.out.println("ID: " + rsList.getInt("id")
+                                    + " | Título: " + rsList.getString("titulo")
+                                    + " | Tempo: " + rsList.getInt("tempo") + " min");
+                        }
+                        rsList.close();
+                        stmtList.close();
+
                         System.out.println("Digite o ID para atualizar: ");
                         int idUpdate = sc.nextInt();
                         sc.nextLine();
@@ -556,22 +570,44 @@ public class Aula17 {
                         psUpdate.setString(1, tituloUpdate);
                         psUpdate.setInt(2, tempoUpdate);
                         psUpdate.setInt(3, idUpdate);
-
                         psUpdate.executeUpdate();
                         System.out.println("Receita atualizada!");
                         break;
                     case 4:
                         System.out.println("delete");
+
+                        String selectReceitasDelete = "SELECT id, titulo, tempo FROM receita";
+                        Statement stmtListDelete = conexao.createStatement();
+                        ResultSet rsListDelete = stmtListDelete.executeQuery(selectReceitasDelete);
+
+                        System.out.println("Receitas cadastradas:");
+                        while (rsListDelete.next()) {
+                            System.out.println("ID: " + rsListDelete.getInt("id")
+                                    + " | Título: " + rsListDelete.getString("titulo")
+                                    + " | Tempo: " + rsListDelete.getInt("tempo") + " min");
+                        }
+                        rsListDelete.close();
+                        stmtListDelete.close();
+
                         System.out.println("Digite o ID que gostaria de deletar: ");
                         int idDelete = sc.nextInt();
                         sc.nextLine();
 
-                        String delete = ("DELETE FROM ingrediente_receita WHERE receita_id = ?" +
-                                        "DELETE FROM ferramenta_receita WHERE receita_id = ? " +
-                                        "DELETE FROM receita WHERE id = ?;");
+                        String deleteFerramentaReceita = "DELETE FROM ferramenta_receita WHERE receita_id = ?";
+                        PreparedStatement psDeleteFerramentaReceita = conexao.prepareStatement(deleteFerramentaReceita);
+                        psDeleteFerramentaReceita.setInt(1, idDelete);
+                        psDeleteFerramentaReceita.executeUpdate();
+
+                        String deleteIngredienteReceita = "DELETE FROM ingrediente_receita WHERE receita_id = ?";
+                        PreparedStatement psDeleteIngredienteReceita = conexao.prepareStatement(deleteIngredienteReceita);
+                        psDeleteIngredienteReceita.setInt(1, idDelete);
+                        psDeleteIngredienteReceita.executeUpdate();
+
+                        String delete = "DELETE FROM receita WHERE id = ?";
                         PreparedStatement psDelete = conexao.prepareStatement(delete);
                         psDelete.setInt(1, idDelete);
                         psDelete.executeUpdate();
+
                         System.out.println("Receita deletada com sucesso!");
 
 
