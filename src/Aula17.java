@@ -490,28 +490,29 @@ public class Aula17 {
                                     break;
 
                                 // preparo
-                                case 6:
+                                case 6: {
                                     System.out.println("Novo modo de preparo:");
                                     String novoPreparo = sc.nextLine();
 
-                                    String selectPrep = "SELECT preparo_id FROM receita WHERE id = ?";
-                                    PreparedStatement psPrep = conexao.prepareStatement(selectPrep);
-                                    psPrep.setInt(1, idReceita);
-                                    ResultSet rsPrep = psPrep.executeQuery();
+                                    String selectPrepEdit = "SELECT preparo_id FROM receita WHERE id = ?";
+                                    PreparedStatement psPrepEdit = conexao.prepareStatement(selectPrepEdit);
+                                    psPrepEdit.setInt(1, idReceita);
+                                    ResultSet rsPrepEdit = psPrepEdit.executeQuery();
 
-                                    int preparoId = 0;
-                                    if (rsPrep.next()) {
-                                        preparoId = rsPrep.getInt("preparo_id");
+                                    int preparoIdEdit = 0;
+                                    if (rsPrepEdit.next()) {
+                                        preparoIdEdit = rsPrepEdit.getInt("preparo_id");
                                     }
 
                                     String up6 = "UPDATE preparo SET modo_preparo = ? WHERE id = ?";
                                     PreparedStatement ps6 = conexao.prepareStatement(up6);
                                     ps6.setString(1, novoPreparo);
-                                    ps6.setInt(2, preparoId);
+                                    ps6.setInt(2, preparoIdEdit);
                                     ps6.executeUpdate();
 
                                     System.out.println("Preparo atualizado!");
                                     break;
+                                }
 
                                 // ingredientes
                                 case 7:
