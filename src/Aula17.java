@@ -497,11 +497,11 @@ public class Aula17 {
                                     String selectPrep = "SELECT preparo_id FROM receita WHERE id = ?";
                                     PreparedStatement psPrep = conexao.prepareStatement(selectPrep);
                                     psPrep.setInt(1, idReceita);
-                                    ResultSet rsPrep = psPrep.executeQuery();
+                                    ResultSet rspreparoIdEdit = psPrep.executeQuery();
 
                                     int preparoId = 0;
-                                    if (rsPrep.next()) {
-                                        preparoId = rsPrep.getInt("preparo_id");
+                                    if (rspreparoIdEdit.next()) {
+                                        preparoId = rspreparoIdEdit.getInt("preparo_id");
                                     }
 
                                     String up6 = "UPDATE preparo SET modo_preparo = ? WHERE id = ?";
@@ -525,12 +525,12 @@ public class Aula17 {
                                                         WHERE ir.receita_id = ? ;
                                                         """);
 
-                                    PreparedStatement psIng = conexao.prepareStatement(selectIng);
-                                    psIng.setInt(1, idReceita);
-                                    ResultSet rsIng = psIng.executeQuery();
+                                    PreparedStatement psIngEdit = conexao.prepareStatement(selectIng);
+                                    psIngEdit.setInt(1, idReceita);
+                                    ResultSet rsIngEdit = psIngEdit.executeQuery();
 
-                                    while (rsIng.next()) {
-                                        System.out.println(rsIng.getInt("id") + " - " + rsIng.getString("ingrediente"));
+                                    while (rsIngEdit.next()) {
+                                        System.out.println(rsIngEdit.getInt("id") + " - " + rsIngEdit.getString("ingrediente"));
                                     }
 
                                     System.out.println("""
@@ -633,12 +633,12 @@ public class Aula17 {
                                                         WHERE fr.receita_id = ? ;
                                                         """);
 
-                                    PreparedStatement psUt = conexao.prepareStatement(selectUt);
-                                    psUt.setInt(1, idReceita);
-                                    ResultSet rsUt = psUt.executeQuery();
+                                    PreparedStatement psUtEdit = conexao.prepareStatement(selectUt);
+                                    psUtEdit.setInt(1, idReceita);
+                                    ResultSet rsUtEdit = psUtEdit.executeQuery();
 
-                                    while (rsUt.next()) {
-                                        System.out.println(rsUt.getInt("id") + " - " + rsUt.getString("utensilios"));
+                                    while (rsUtEdit.next()) {
+                                        System.out.println(rsUtEdit.getInt("id") + " - " + rsUtEdit.getString("utensilios"));
                                     }
 
                                     System.out.println("""
