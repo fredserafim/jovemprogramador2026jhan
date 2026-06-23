@@ -398,17 +398,17 @@ public class Aula17 {
                         while (opcEdit != 0) {
 
                             System.out.println("""
-                                                  ===== MENU EDIÇÃO =====
-                                                    1 - Editar título
-                                                    2 - Editar tempo
-                                                    3 - Editar porções
-                                                    4 - Editar categoria
-                                                    5 - Editar complexidade
-                                                    6 - Editar modo preparo
-                                                    7 - Editar ingredientes
-                                                    8 - Editar utensílios
-                                                    0 - Finalizar edição
-                                                    """);
+                                    ===== MENU EDIÇÃO =====
+                                      1 - Editar título
+                                      2 - Editar tempo
+                                      3 - Editar porções
+                                      4 - Editar categoria
+                                      5 - Editar complexidade
+                                      6 - Editar modo preparo
+                                      7 - Editar ingredientes
+                                      8 - Editar utensílios
+                                      0 - Finalizar edição
+                                    """);
 
                             opcEdit = sc.nextInt();
                             sc.nextLine();
@@ -515,37 +515,44 @@ public class Aula17 {
                                 }
 
                                 // ingredientes
-                                case 7:
+                                case 7: {
 
                                     System.out.println("Ingredientes da receita:");
 
-                                    String selectIng = ("""
-                                                        SELECT ir.id, i.ingrediente
-                                                        FROM ingrediente_receita ir
-                                                        JOIN ingredientes i ON i.id = ir.ingredientes_id
-                                                        WHERE ir.receita_id = ? ;
-                                                        """);
+                                    String selectIngEdit = ("""
+                        
+                                            SELECT ir.id, i.ingrediente
+                                                                    FROM ingrediente_receita ir
+                                                                    JOIN ingredientes i ON i.
+                                            
+                                                                   WHERE ir.receita_id = ? ;
+                        """);
 
-                                    PreparedStatement psIng = conexao.prepareStatement(selectIng);
-                                    psIng.setInt(1, idReceita);
-                                    ResultSet rsIng = psIng.executeQuery();
+                                    PreparedStatement psIngEdit = conexao.prepareStatement(selectIngEdit);
+                                    psIngEdit.setInt(1, idReceita);
+                                    ResultSet rsIngEdit = psIngEdit.executeQuery();
 
-                                    while (rsIng.next()) {
-                                        System.out.println(rsIng.getInt("id") + " - " + rsIng.getString("ingrediente"));
+                                    while (rsIngEdit.next()) {
+                                        System.out.println(rsIngEdit.getInt("id") + " - " + rsIngEdit.getString("ingrediente"));
                                     }
 
-                                    System.out.println("""
-                                                        1 - Trocar ingrediente
-                                                        2 - Remover ingrediente
-                                                        3 - Adicionar ingrediente
-                                                        0 - Voltar
-                                                        """);
+                                    System.out.println(
+                                            """
+                                                    1 - Trocar ingrediente
+                                                    
+                                                    
+                                                                                   iente
+                                                    
+                                                    
+                                                                                                  iente
+                                                    
+                                                                                                       oltar
+                                                    """);
 
                                     int opIng = sc.nextInt();
                                     sc.nextLine();
 
                                     if (opIng == 1) {
-
                                         System.out.println("ID da relação ingrediente_receita:");
                                         int relId = sc.nextInt();
                                         sc.nextLine();
@@ -564,7 +571,6 @@ public class Aula17 {
                                     }
 
                                     if (opIng == 2) {
-
                                         System.out.println("ID da relação para remover:");
                                         int relId = sc.nextInt();
                                         sc.nextLine();
@@ -578,7 +584,6 @@ public class Aula17 {
                                     }
 
                                     if (opIng == 3) {
-
                                         System.out.println("Nome do ingrediente:");
                                         String nomeIng = sc.nextLine().trim().toLowerCase();
 
@@ -621,33 +626,34 @@ public class Aula17 {
                                     }
 
                                     break;
+                                }
 
                                 // utensilios
-                                case 8:
+                                case 8: {
 
                                     System.out.println("Utensílios:");
 
-                                    String selectUt = ("""
-                                                        SELECT fr.id, f.utensilios
-                                                        FROM ferramenta_receita fr
-                                                        JOIN ferramentas f ON f.id = fr.ferramentas_id
-                                                        WHERE fr.receita_id = ? ;
-                                                        """);
+                                    String selectUtEdit = """
+            SELECT fr.id, f.utensilios
+            FROM ferramenta_receita fr
+            JOIN ferramentas f ON f.id = fr.ferramentas_id
+            WHERE fr.receita_id = ? ;
+            """;
 
-                                    PreparedStatement psUt = conexao.prepareStatement(selectUt);
-                                    psUt.setInt(1, idReceita);
-                                    ResultSet rsUt = psUt.executeQuery();
+                                    PreparedStatement psUtEdit = conexao.prepareStatement(selectUtEdit);
+                                    psUtEdit.setInt(1, idReceita);
+                                    ResultSet rsUtEdit = psUtEdit.executeQuery();
 
-                                    while (rsUt.next()) {
-                                        System.out.println(rsUt.getInt("id") + " - " + rsUt.getString("utensilios"));
+                                    while (rsUtEdit.next()) {
+                                        System.out.println(rsUtEdit.getInt("id") + " - " + rsUtEdit.getString("utensilios"));
                                     }
 
                                     System.out.println("""
-                                                         1 - Trocar utensílio
-                                                         2 - Remover utensílio
-                                                         3 - Adicionar utensílio
-                                                         0 - Voltar
-                                                        """);
+            1 - Trocar utensílio
+            2 - Remover utensílio
+            3 - Adicionar utensílio
+            0 - Voltar
+            """);
 
                                     int opUt = sc.nextInt();
                                     sc.nextLine();
@@ -720,8 +726,13 @@ public class Aula17 {
                                     }
 
                                     break;
+                                } //
                             }
+
+
+
                         }
+
 
                         break;
                         case 4:
