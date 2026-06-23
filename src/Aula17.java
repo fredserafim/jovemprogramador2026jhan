@@ -490,29 +490,28 @@ public class Aula17 {
                                     break;
 
                                 // preparo
-                                case 6: {
+                                case 6:
                                     System.out.println("Novo modo de preparo:");
                                     String novoPreparo = sc.nextLine();
 
-                                    String selectPrepEdit = "SELECT preparo_id FROM receita WHERE id = ?";
-                                    PreparedStatement psPrepEdit = conexao.prepareStatement(selectPrepEdit);
-                                    psPrepEdit.setInt(1, idReceita);
-                                    ResultSet rsPrepEdit = psPrepEdit.executeQuery();
+                                    String selectPrep = "SELECT preparo_id FROM receita WHERE id = ?";
+                                    PreparedStatement psPrep = conexao.prepareStatement(selectPrep);
+                                    psPrep.setInt(1, idReceita);
+                                    ResultSet rspreparoIdEdit = psPrep.executeQuery();
 
-                                    int preparoIdEdit = 0;
-                                    if (rsPrepEdit.next()) {
-                                        preparoIdEdit = rsPrepEdit.getInt("preparo_id");
+                                    int preparoId = 0;
+                                    if (rspreparoIdEdit.next()) {
+                                        preparoId = rspreparoIdEdit.getInt("preparo_id");
                                     }
 
                                     String up6 = "UPDATE preparo SET modo_preparo = ? WHERE id = ?";
                                     PreparedStatement ps6 = conexao.prepareStatement(up6);
                                     ps6.setString(1, novoPreparo);
-                                    ps6.setInt(2, preparoIdEdit);
+                                    ps6.setInt(2, preparoId);
                                     ps6.executeUpdate();
 
                                     System.out.println("Preparo atualizado!");
                                     break;
-                                }
 
                                 // ingredientes
                                 case 7:
@@ -526,12 +525,12 @@ public class Aula17 {
                                                         WHERE ir.receita_id = ? ;
                                                         """);
 
-                                    PreparedStatement psIng = conexao.prepareStatement(selectIng);
-                                    psIng.setInt(1, idReceita);
-                                    ResultSet rsIng = psIng.executeQuery();
+                                    PreparedStatement psIngEdit = conexao.prepareStatement(selectIng);
+                                    psIngEdit.setInt(1, idReceita);
+                                    ResultSet rsIngEdit = psIngEdit.executeQuery();
 
-                                    while (rsIng.next()) {
-                                        System.out.println(rsIng.getInt("id") + " - " + rsIng.getString("ingrediente"));
+                                    while (rsIngEdit.next()) {
+                                        System.out.println(rsIngEdit.getInt("id") + " - " + rsIngEdit.getString("ingrediente"));
                                     }
 
                                     System.out.println("""
@@ -634,12 +633,12 @@ public class Aula17 {
                                                         WHERE fr.receita_id = ? ;
                                                         """);
 
-                                    PreparedStatement psUt = conexao.prepareStatement(selectUt);
-                                    psUt.setInt(1, idReceita);
-                                    ResultSet rsUt = psUt.executeQuery();
+                                    PreparedStatement psUtEdit = conexao.prepareStatement(selectUt);
+                                    psUtEdit.setInt(1, idReceita);
+                                    ResultSet rsUtEdit = psUtEdit.executeQuery();
 
-                                    while (rsUt.next()) {
-                                        System.out.println(rsUt.getInt("id") + " - " + rsUt.getString("utensilios"));
+                                    while (rsUtEdit.next()) {
+                                        System.out.println(rsUtEdit.getInt("id") + " - " + rsUtEdit.getString("utensilios"));
                                     }
 
                                     System.out.println("""
