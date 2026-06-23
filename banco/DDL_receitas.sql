@@ -42,7 +42,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `caderno_receita`.`usuario` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
-  `senha` INT NOT NULL,
+  `senha` VARCHAR(225) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
