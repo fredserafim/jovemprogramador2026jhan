@@ -3,7 +3,7 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Aula17 {
-    public  static void main(String[] args) {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
         String url = "jdbc:mysql://127.0.0.1:3306/caderno_receita";
@@ -12,8 +12,7 @@ public class Aula17 {
         int opcao;
 
 
-
-        try{
+        try {
             Connection conexao = DriverManager.getConnection(url, user, password);
             System.out.println("Conectado!");
 
@@ -22,10 +21,10 @@ public class Aula17 {
 
             //===================================== LOGIN ===============================
             System.out.println("""
-                  *****LOGIN*****
-                  1 - Cadastrar novo usuario
-                  2 - Entrar
-                  """);
+                    *****LOGIN*****
+                    1 - Cadastrar novo usuario
+                    2 - Entrar
+                    """);
 
             int opLogin = sc.nextInt();
             sc.nextLine();
@@ -37,7 +36,7 @@ public class Aula17 {
                 System.out.println("Senha:");
                 String senha = sc.nextLine();
 
-                String mySQL ="INSERT INTO usuario (nome, senha) VALUES (?, ?)";
+                String mySQL = "INSERT INTO usuario (nome, senha) VALUES (?, ?)";
                 PreparedStatement ps = conexao.prepareStatement(mySQL);
                 ps.setString(1, nome);
                 ps.setString(2, senha);
@@ -70,7 +69,6 @@ public class Aula17 {
             }
 
 
-
             //===================================== RECEITA ===============================
             do {
                 Thread.sleep(1000);
@@ -85,22 +83,22 @@ public class Aula17 {
                     totalReceitas = rs.getInt("total");
                 }
                 System.out.printf("""
-                      ====Caderno Receitas da vó Nadir====
-                      1 - Adicionar  Receita
-                      2 - Pesquisar Receitas
-                      3 - Atualizar Receita
-                      4 - Deletar pois não gostei
-                      0 - Sair
-                      
-                      
-                      
-                      Receitas existentes : %d
-                      """,totalReceitas);
+                        ====Caderno Receitas da vó Nadir====
+                        1 - Adicionar  Receita
+                        2 - Pesquisar Receitas
+                        3 - Atualizar Receita
+                        4 - Deletar pois não gostei
+                        0 - Sair
+                        
+                        
+                        
+                        Receitas existentes : %d
+                        """, totalReceitas);
                 System.out.println(" Digite a opção :");
                 opcao = sc.nextInt();
                 sc.nextLine();
 
-                switch (opcao){
+                switch (opcao) {
                     case 1:
 
                         System.out.println("Adicionar Receita");
@@ -112,26 +110,26 @@ public class Aula17 {
                         int tempo = sc.nextInt();
 
                         System.out.println("""
-                                     Dificuldade:
-                                     1 - Facil
-                                     2 - Media
-                                     3 - Dificil
-                                     """);
+                                Dificuldade:
+                                1 - Facil
+                                2 - Media
+                                3 - Dificil
+                                """);
                         int complexidade_id = sc.nextInt();
 
                         System.out.println("Digite quantas pessoas serve: ");
                         int porcoes = sc.nextInt();
 
                         System.out.println("""
-                                 Categoria:
-                                 1 - Doce
-                                 2 - Salgado
-                                 3 - Agridoce
-                                 """);
+                                Categoria:
+                                1 - Doce
+                                2 - Salgado
+                                3 - Agridoce
+                                """);
                         int categoria_id = sc.nextInt();
                         sc.nextLine();
 
-                         // modo preparo
+                        // modo preparo
                         System.out.println("Modo de preparo: ");
                         String modoPreparo = sc.nextLine();
 
@@ -213,7 +211,7 @@ public class Aula17 {
                             sc.nextLine();
                         }
 
-                    //utensilios
+                        //utensilios
                         int continuarUt = 1;
                         while (continuarUt == 1) {
 
@@ -240,7 +238,7 @@ public class Aula17 {
                                 ferramentas_id = rsKey.getInt(1);
                             }
 
-                            String sqlRelUt =("insert into ferramenta_receita (receita_id, ferramentas_id) values (?, ?);");
+                            String sqlRelUt = ("insert into ferramenta_receita (receita_id, ferramentas_id) values (?, ?);");
                             PreparedStatement psRelUt = conexao.prepareStatement(sqlRelUt);
                             psRelUt.setInt(1, receita_id);
                             psRelUt.setInt(2, ferramentas_id);
@@ -254,14 +252,14 @@ public class Aula17 {
                         }
 
                         System.out.printf("""
-                              =================================
-                                RECEITA CADASTRADA COM SUCESSO
-                              =================================
-                             
-                             Título:  %s
-                             Tempo:   %d minutos
-                             Porções: %d
-                             """, titulo,tempo,porcoes);
+                                 =================================
+                                   RECEITA CADASTRADA COM SUCESSO
+                                 =================================
+                                
+                                Título:  %s
+                                Tempo:   %d minutos
+                                Porções: %d
+                                """, titulo, tempo, porcoes);
 
                         break;
                     case 2:
@@ -271,11 +269,11 @@ public class Aula17 {
                         String tituloid = sc.nextLine();
 
                         String select = ("""
-                                            select id, titulo from receita
-                                            where titulo like ?
-                                            order by id asc;
+                                 select id, titulo from receita
+                                 where titulo like ?
+                                 order by id asc;
                                 
-                                           """);
+                                """);
                         PreparedStatement psSelect = conexao.prepareStatement(select);
                         psSelect.setString(1, "%" + tituloid + "%");
 
@@ -296,14 +294,14 @@ public class Aula17 {
 
                         // receitas
                         String selectReceita = """
-                                               select re.titulo,com.dificuldade,cat.classificacao,re.tempo,re.porcoes,pre.modo_preparo,usu.nome,re.data_criacao
-                                               from receita re
-                                               join complexidade com on re.complexidade_id = com.id
-                                               join categoria cat on re.categoria_id = cat.id
-                                               join preparo pre on re.preparo_id = pre.id
-                                               join usuario usu on re.usuario_id = usu.id
-                                               where re.id = ?;
-                                               """;
+                                select re.titulo,com.dificuldade,cat.classificacao,re.tempo,re.porcoes,pre.modo_preparo,usu.nome,re.data_criacao
+                                from receita re
+                                join complexidade com on re.complexidade_id = com.id
+                                join categoria cat on re.categoria_id = cat.id
+                                join preparo pre on re.preparo_id = pre.id
+                                join usuario usu on re.usuario_id = usu.id
+                                where re.id = ?;
+                                """;
 
                         PreparedStatement psSelectReceita = conexao.prepareStatement(selectReceita);
                         psSelectReceita.setInt(1, tituloid1);
@@ -323,11 +321,11 @@ public class Aula17 {
 
                         // ingredientes
                         String selectIngredientes = """
-                                                    select igrs.ingrediente,igr.quantidade,igrs.unidade_medida
-                                                    from ingrediente_receita igr
-                                                    join ingredientes igrs on igr.ingredientes_id = igrs.id
-                                                    where igr.receita_id = ?;
-                                                    """;
+                                select igrs.ingrediente,igr.quantidade,igrs.unidade_medida
+                                from ingrediente_receita igr
+                                join ingredientes igrs on igr.ingredientes_id = igrs.id
+                                where igr.receita_id = ?;
+                                """;
 
                         PreparedStatement psIng = conexao.prepareStatement(selectIngredientes);
                         psIng.setInt(1, tituloid1);
@@ -346,11 +344,11 @@ public class Aula17 {
 
                         // utensilios
                         String selectUtensilios = """
-                                                  select fer.utensilios
-                                                  from ferramenta_receita fr
-                                                  join ferramentas fer on fer.id = fr.ferramentas_id
-                                                  where fr.receita_id = ?;
-                                                  """;
+                                select fer.utensilios
+                                from ferramenta_receita fr
+                                join ferramentas fer on fer.id = fr.ferramentas_id
+                                where fr.receita_id = ?;
+                                """;
 
                         PreparedStatement psUt = conexao.prepareStatement(selectUtensilios);
                         psUt.setInt(1, tituloid1);
@@ -372,7 +370,7 @@ public class Aula17 {
                                 rsReceita.getDate("data_criacao"));
 
                         break;
-                        case 3:
+                    case 3:
                         System.out.println("update");
 
                         // LISTA RECEITAS
@@ -520,13 +518,13 @@ public class Aula17 {
                                     System.out.println("Ingredientes da receita:");
 
                                     String selectIngEdit = ("""
-                        
-                                            SELECT ir.id, i.ingrediente
-                                                                    FROM ingrediente_receita ir
-                                                                    JOIN ingredientes i ON i.
                                             
-                                                                   WHERE ir.receita_id = ? ;
-                        """);
+                                                                SELECT ir.id, i.ingrediente
+                                                                                        FROM ingrediente_receita ir
+                                                                                        JOIN ingredientes i ON i.
+                                            
+                                                                                       WHERE ir.receita_id = ? ;
+                                            """);
 
                                     PreparedStatement psIngEdit = conexao.prepareStatement(selectIngEdit);
                                     psIngEdit.setInt(1, idReceita);
@@ -634,11 +632,11 @@ public class Aula17 {
                                     System.out.println("Utensílios:");
 
                                     String selectUtEdit = """
-            SELECT fr.id, f.utensilios
-            FROM ferramenta_receita fr
-            JOIN ferramentas f ON f.id = fr.ferramentas_id
-            WHERE fr.receita_id = ? ;
-            """;
+                                            SELECT fr.id, f.utensilios
+                                            FROM ferramenta_receita fr
+                                            JOIN ferramentas f ON f.id = fr.ferramentas_id
+                                            WHERE fr.receita_id = ? ;
+                                            """;
 
                                     PreparedStatement psUtEdit = conexao.prepareStatement(selectUtEdit);
                                     psUtEdit.setInt(1, idReceita);
@@ -649,11 +647,11 @@ public class Aula17 {
                                     }
 
                                     System.out.println("""
-            1 - Trocar utensílio
-            2 - Remover utensílio
-            3 - Adicionar utensílio
-            0 - Voltar
-            """);
+                                            1 - Trocar utensílio
+                                            2 - Remover utensílio
+                                            3 - Adicionar utensílio
+                                            0 - Voltar
+                                            """);
 
                                     int opUt = sc.nextInt();
                                     sc.nextLine();
@@ -730,12 +728,11 @@ public class Aula17 {
                             }
 
 
-
                         }
 
 
                         break;
-                        case 4:
+                    case 4:
                         System.out.println("delete");
 
                         String selectReceitasDelete = "SELECT id, titulo, tempo FROM receita";
@@ -773,7 +770,6 @@ public class Aula17 {
                         System.out.println("Receita deletada com sucesso!");
 
 
-
                         break;
                     case 0:
                         System.out.println("Programa Finalizado");
@@ -782,9 +778,8 @@ public class Aula17 {
                         System.out.println("Opção invalida!");
 
 
-
                 }
-            }while(opcao!=0);
+            } while (opcao != 0);
             conexao.close();
 
         } catch (Exception e) {
@@ -793,8 +788,6 @@ public class Aula17 {
 
 
         sc.close();
-
-
 
 
     }
