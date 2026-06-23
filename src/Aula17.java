@@ -649,10 +649,10 @@ public class Aula17 {
                                     }
 
                                     System.out.println("""
-            1 - Trocar utensílio
-            2 - Remover utensílio
-            3 - Adicionar utensílio
-            0 - Voltar
+            1 - Trocar utensílio.
+            2 - Remover utensílio.
+            3 - Adicionar utensílio.
+            0 - Voltar.
             """);
 
                                     int opUt = sc.nextInt();
