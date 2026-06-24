@@ -21,51 +21,136 @@ public class Aula17 {
             int usuarioId = 0;
 
             //===================================== LOGIN ===============================
-            System.out.println("""
+            while (true) {
+
+                System.out.println("""
                   *****LOGIN*****
-                  1 - Cadastrar novo usuario
-                  2 - Entrar
-                  """);
+                   1 - Cadastrar novo usuario
+                   2 - Entrar
+                 """);
 
-            int opLogin = sc.nextInt();
-            sc.nextLine();
+                //OBRIGA A ESCOLHER CADASTRO OU LOGIN
+                if (!sc.hasNextInt()) {
+                    System.out.println("Opção inválida! Digite apenas 1 ou 2.");
+                    sc.nextLine(); // Exclui o que foi digitado
+                    continue;
+                }
 
-            if (opLogin == 1) {
-                System.out.println("Nome:");
-                String nome = sc.nextLine();
+                opcao = sc.nextInt();
+                sc.nextLine();
 
-                System.out.println("Senha:");
-                String senha = sc.nextLine();
+                if (opcao !=1 && opcao !=2) {
+                    System.out.println("Opção inválida! Digite apenas 1 ou 2.");
+                    continue;
+                }
 
-                String mySQL ="INSERT INTO usuario (nome, senha) VALUES (?, ?)";
-                PreparedStatement ps = conexao.prepareStatement(mySQL);
-                ps.setString(1, nome);
-                ps.setString(2, senha);
-                ps.executeUpdate();
+                //CADASTRO DE USUARIO
+                if (opcao == 1) {
 
-                System.out.println("Usuário cadastrado com sucesso!");
+                    System.out.println("Nome:");
+                    String nome = sc.nextLine();
 
-            }
+                    if (nome.trim().isEmpty()) {
+                    System.out.println("Usuário não pode ser vazio!");
+                    continue;
+                    }
 
-            if (opLogin == 2) {
-                System.out.println("Nome:");
-                String nome = sc.nextLine();
 
-                System.out.println("Senha:");
-                String senha = sc.nextLine();
+                    String verificarUsuario = "SELECT id FROM usuario WHERE nome = ?";
 
-                String mySQL = "SELECT id FROM usuario WHERE nome = ? AND senha = ?";
-                PreparedStatement ps = conexao.prepareStatement(mySQL);
-                ps.setString(1, nome);
-                ps.setString(2, senha);
-                ResultSet rs = ps.executeQuery();
+                    PreparedStatement psVerificarUsuario =
+                            conexao.prepareStatement(verificarUsuario);
 
-                if (rs.next()) {
-                    usuarioId = rs.getInt("id");
-                    System.out.println("Login realizado!");
-                } else {
-                    System.out.println("Usuário Inválido!");
-                    return;
+                    psVerificarUsuario.setString(1, nome);
+
+                    ResultSet rsVerificarUsuario =
+                            psVerificarUsuario.executeQuery();
+
+
+                    if (rsVerificarUsuario.next()) {
+
+                        System.out.println("Usuário já existe!");
+                        System.out.println("Escolha outro nome de usuário para cadastrar.");
+
+                        continue; // volta para o começo do while
+                    }
+
+
+                    System.out.println("Senha:");
+                    String senha = sc.nextLine();
+
+                    if (senha.trim().isEmpty()) {
+                    System.out.println("Senha não pode ser vazia!");
+                    continue;
+                    }
+
+
+                    String mySQL = "INSERT INTO usuario (nome, senha) VALUES (?, ?)";
+
+
+                    PreparedStatement ps =
+                            conexao.prepareStatement(
+                                    mySQL,
+                                    Statement.RETURN_GENERATED_KEYS
+                            );
+
+
+                    ps.setString(1, nome);
+                    ps.setString(2, senha);
+
+                    ps.executeUpdate();
+
+
+                    ResultSet rs = ps.getGeneratedKeys();
+
+
+                    if(rs.next()){
+                        usuarioId = rs.getInt(1);
+                    }
+
+
+                    System.out.println("Usuário cadastrado com sucesso!");
+
+                    break; // sai do login
+                }
+
+                //LOGIN DO USUARIO
+                if (opcao == 2) {
+
+                    System.out.println("Nome:");
+                    String nome = sc.nextLine();
+
+                    System.out.println("Senha:");
+                    String senha = sc.nextLine();
+
+
+                    String mySQL =
+                            "SELECT id FROM usuario WHERE nome = ? AND senha = ?";
+
+
+                    PreparedStatement ps =
+                            conexao.prepareStatement(mySQL);
+
+
+                    ps.setString(1,nome);
+                    ps.setString(2,senha);
+
+
+                    ResultSet rs = ps.executeQuery();
+
+
+                    if(rs.next()) {
+
+                        usuarioId = rs.getInt("id");
+
+                        System.out.println("Login realizado!");
+
+                        break; // sai do login
+                    }
+                    else {
+
+                        System.out.println("Usuário ou senha inválidos!");
+                    }
                 }
             }
 
@@ -158,6 +243,8 @@ public class Aula17 {
                         psReceita.setInt(7, usuarioId);
                         psReceita.setDate(8, Date.valueOf(LocalDate.now()));
 
+                        System.out.println("usuarioId = " + usuarioId);
+
                         psReceita.executeUpdate();
 
                         ResultSet rsRec = psReceita.getGeneratedKeys();
@@ -175,7 +262,7 @@ public class Aula17 {
                             double qtd = sc.nextDouble();
                             sc.nextLine();
 
-                            System.out.println("Qual unidade de pedida : ");
+                            System.out.println("Qual unidade de medida : ");
                             String unidadeMedida = sc.nextLine().trim().toLowerCase();
 
                             String sqlBuscaIng = ("select id from ingredientes where lower(ingrediente) = ?;");
