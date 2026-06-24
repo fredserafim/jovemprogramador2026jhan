@@ -19,6 +19,7 @@ public class Aula17 {
 
 
             int usuarioId = 0;
+            int opLogin = -1;
 
             //===================================== LOGIN ===============================
             while (true) {
@@ -169,7 +170,8 @@ public class Aula17 {
                 if (rs.next()) {
                     totalReceitas = rs.getInt("total");
                 }
-                System.out.printf("""
+                do {
+                    System.out.printf("""
                       ====Caderno Receitas da vó Nadir====
                       1 - Adicionar  Receita
                       2 - Pesquisar Receitas
@@ -181,9 +183,13 @@ public class Aula17 {
                       
                       Receitas existentes : %d
                       """,totalReceitas);
-                System.out.println(" Digite a opção :");
-                opcao = sc.nextInt();
-                sc.nextLine();
+                    System.out.println(" Digite a opção :");
+                    opcao = sc.nextInt();
+                    sc.nextLine();
+                    if (opcao < 0 || opcao > 4) {
+                        System.out.println(" \nOpção invalida");
+                    }
+                }while(opcao < 2 || opcao > 4);
 
                 switch (opcao){
                     case 1:
@@ -195,26 +201,38 @@ public class Aula17 {
 
                         System.out.println("Digite o tempo: ");
                         int tempo = sc.nextInt();
-
-                        System.out.println("""
+                        int complexidade_id = 0;
+                        do{
+                            System.out.println("""
                                      Dificuldade:
                                      1 - Facil
                                      2 - Media
                                      3 - Dificil
                                      """);
-                        int complexidade_id = sc.nextInt();
+                          complexidade_id = sc.nextInt();
+                          if(complexidade_id < 1 || complexidade_id >3) {
+                            System.out.println(" \nOpção invalida");
+
+                          }
+                        }while(complexidade_id < 1 || complexidade_id >3);
 
                         System.out.println("Digite quantas pessoas serve: ");
                         int porcoes = sc.nextInt();
+                        int categoria_id=0;
+                        do {
+                            System.out.println("""
+                                    Categoria:
+                                    1 - Doce
+                                    2 - Salgado
+                                    3 - Agridoce
+                                    """);
+                            categoria_id = sc.nextInt();
+                            sc.nextLine();
+                            if (categoria_id < 1 || categoria_id > 3) {
+                                System.out.println(" \nOpção invalida");
+                            }
+                        }while(categoria_id < 1 || categoria_id > 3);
 
-                        System.out.println("""
-                                 Categoria:
-                                 1 - Doce
-                                 2 - Salgado
-                                 3 - Agridoce
-                                 """);
-                        int categoria_id = sc.nextInt();
-                        sc.nextLine();
 
                          // modo preparo
                         System.out.println("Modo de preparo: ");
@@ -293,11 +311,17 @@ public class Aula17 {
                             psRelIng.setDouble(3, qtd);
                             psRelIng.executeUpdate();
 
-                            System.out.println("""
+                            do {
+                                System.out.println("""
                                     Gostaria de acrescentar mais algum ingrediente?
                                     1 - Sim / 2 - Não""");
-                            continuarIng = sc.nextInt();
-                            sc.nextLine();
+                                continuarIng = sc.nextInt();
+                                sc.nextLine();
+                                if (continuarIng < 1 || continuarIng > 2) {
+                                    System.out.println(" \nOpção invalida");
+                                }
+                            }while(continuarIng < 1 || continuarIng > 2);
+
                         }
 
                     //utensilios
@@ -333,11 +357,17 @@ public class Aula17 {
                             psRelUt.setInt(2, ferramentas_id);
                             psRelUt.executeUpdate();
 
-                            System.out.println("""
+                            do {
+                                System.out.println("""
                                     Gostaria de acrescentar mais algum utensilio?
                                     1 - Sim / 2 - Não""");
-                            continuarUt = sc.nextInt();
-                            sc.nextLine();
+                                continuarUt = sc.nextInt();
+                                sc.nextLine();
+                                if (continuarUt < 1 || continuarUt > 2) {
+                                    System.out.println(" \nOpção invalida");
+                                }
+                            }while(continuarUt < 1 || continuarUt > 2);
+
                         }
 
                         System.out.printf("""
@@ -484,7 +514,8 @@ public class Aula17 {
 
                         while (opcEdit != 0) {
 
-                            System.out.println("""
+                            do {
+                                System.out.println("""
                                                   ===== MENU EDIÇÃO =====
                                                     1 - Editar título
                                                     2 - Editar tempo
@@ -495,10 +526,13 @@ public class Aula17 {
                                                     7 - Editar ingredientes
                                                     8 - Editar utensílios
                                                     0 - Finalizar edição
-                                                    """);
-
-                            opcEdit = sc.nextInt();
-                            sc.nextLine();
+                                                  """);
+                                opcEdit = sc.nextInt();
+                                sc.nextLine();
+                                if (opcEdit < 0 || opcEdit > 9) {
+                                    System.out.println(" \nOpção invalida");
+                                }
+                            }while(opcEdit < 0 || opcEdit > 8);
 
                             switch (opcEdit) {
 
@@ -620,15 +654,21 @@ public class Aula17 {
                                         System.out.println(rsIngEdit.getInt("id") + " - " + rsIngEdit.getString("ingrediente"));
                                     }
 
-                                    System.out.println("""
+                                    int opIng = -1;
+                                    do {
+                                        System.out.println("""
                                                         1 - Trocar ingrediente
                                                         2 - Remover ingrediente
                                                         3 - Adicionar ingrediente
                                                         0 - Voltar
                                                         """);
+                                        opIng = sc.nextInt();
+                                        sc.nextLine();
+                                        if (opIng < 0 || opIng > 3) {
+                                            System.out.println(" \nOpção invalida");
+                                        }
+                                    }while(opIng < 0 || opIng > 3);
 
-                                    int opIng = sc.nextInt();
-                                    sc.nextLine();
 
                                     if (opIng == 1) {
 
@@ -728,15 +768,21 @@ public class Aula17 {
                                         System.out.println(rsUtEdit.getInt("id") + " - " + rsUtEdit.getString("utensilios"));
                                     }
 
-                                    System.out.println("""
+                                    int opUt = -1;
+                                    do {
+                                        System.out.println("""
                                                          1 - Trocar utensílio
                                                          2 - Remover utensílio
                                                          3 - Adicionar utensílio
                                                          0 - Voltar
                                                         """);
+                                        opUt = sc.nextInt();
+                                        sc.nextLine();
+                                        if (opUt < 0 || opUt > 3) {
+                                            System.out.println(" \nOpção invalida");
+                                        }
+                                    }while(opUt < 0 || opUt > 3);
 
-                                    int opUt = sc.nextInt();
-                                    sc.nextLine();
 
                                     if (opUt == 1) {
 
