@@ -24,15 +24,27 @@ public class Aula17 {
             while (true) {
 
                 System.out.println("""
-      *****LOGIN*****
-      1 - Cadastrar novo usuario
-      2 - Entrar
-      """);
+                  *****LOGIN*****
+                   1 - Cadastrar novo usuario
+                   2 - Entrar
+                 """);
+
+                //OBRIGA A ESCOLHER CADASTRO OU LOGIN
+                if (!sc.hasNextInt()) {
+                    System.out.println("Opção inválida! Digite apenas 1 ou 2.");
+                    sc.nextLine(); // Exclui o que foi digitado
+                    continue;
+                }
 
                 opcao = sc.nextInt();
                 sc.nextLine();
 
+                if (opcao !=1 && opcao !=2) {
+                    System.out.println("Opção inválida! Digite apenas 1 ou 2.");
+                    continue;
+                }
 
+                //CADASTRO DE USUARIO
                 if (opcao == 1) {
 
                     System.out.println("Nome:");
@@ -102,8 +114,7 @@ public class Aula17 {
                     break; // sai do login
                 }
 
-
-
+                //LOGIN DO USUARIO
                 if (opcao == 2) {
 
                     System.out.println("Nome:");
