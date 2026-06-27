@@ -577,7 +577,7 @@ public class Aula17 {
                                         while(!sc.hasNextInt()){
                                             System.out.println("Apenas Números, tente novamente!");
                                             sc.next();
-                                        }int cat = sc.nextInt();
+                                        }cat = sc.nextInt();
                                         sc.nextLine();
                                         if (cat < 1 || cat > 3) {
                                             System.out.println(" \nOpção invalida");
@@ -775,9 +775,10 @@ public class Aula17 {
                                     if (opIng == 2) {
 
                                         System.out.println("ID da relação para remover:");
-                                        while(!sc.hasNextInt()){
+                                        while(!sc.hasNextInt()) {
                                             System.out.println("Apenas Números, tente novamente!");
                                             sc.next();
+                                        }
                                         int relId = sc.nextInt();
                                         sc.nextLine();
 
@@ -795,9 +796,10 @@ public class Aula17 {
                                         String nomeIng = sc.nextLine().trim().toLowerCase();
 
                                         System.out.println("Quantidade:");
-                                        while(!sc.hasNextDouble()){
+                                        while(!sc.hasNextDouble()) {
                                             System.out.println("Apenas Números, tente novamente!");
                                             sc.next();
+                                        }
                                         double qtd = sc.nextDouble();
                                         sc.nextLine();
 
@@ -869,9 +871,10 @@ public class Aula17 {
                                                         3 - Adicionar utensílio
                                                         0 - Voltar
                                                         """);
-                                        while(!sc.hasNextInt()){
+                                        while(!sc.hasNextInt()) {
                                             System.out.println("Apenas Números, tente novamente!");
                                             sc.next();
+                                        }
                                         opUt = sc.nextInt();
                                         sc.nextLine();
                                         if (opUt < 0 || opUt > 3) {
@@ -964,6 +967,10 @@ public class Aula17 {
                                     if (opUt == 2) {
 
                                         System.out.println("ID da relação:");
+                                        while (!sc.hasNextInt()) {
+                                            System.out.println("Digite apenas números!");
+                                            sc.next();
+                                        }
                                         int relId = sc.nextInt();
                                         sc.nextLine();
 
@@ -1014,7 +1021,7 @@ public class Aula17 {
                         }
 
                         break;
-                        case 4:
+                    case 4:
                         System.out.println("delete");
 
                         String selectReceitasDelete = "SELECT id, titulo, tempo FROM receita";
@@ -1031,8 +1038,21 @@ public class Aula17 {
                         stmtListDelete.close();
 
                         System.out.println("Digite o ID que gostaria de deletar: ");
+                        while (!sc.hasNextInt()) {
+                            System.out.println("Digite apenas números!");
+                            sc.next();
+                        }
                         int idDelete = sc.nextInt();
                         sc.nextLine();
+
+                        String selectIdPreparo = "SELECT preparo_id FROM receita WHERE id = ?";
+                        PreparedStatement psSelectIdPrep = conexao.prepareStatement(selectIdPreparo);
+                        psSelectIdPrep.setInt(1, idDelete);
+                        ResultSet rsIdPrep = psSelectIdPrep.executeQuery();
+                        int idPreparoDeletar = 0;
+                        if(rsIdPrep.next()) {
+                            idPreparoDeletar = rsIdPrep.getInt("preparo_id");
+                        }
 
                         String deleteFerramentaReceita = "DELETE FROM ferramenta_receita WHERE receita_id = ?";
                         PreparedStatement psDeleteFerramentaReceita = conexao.prepareStatement(deleteFerramentaReceita);
@@ -1049,10 +1069,14 @@ public class Aula17 {
                         psDelete.setInt(1, idDelete);
                         psDelete.executeUpdate();
 
+                        if (idPreparoDeletar > 0) {
+                            String deletePreparo = "DELETE FROM preparo WHERE id = ?";
+                            PreparedStatement psDeletePreparo = conexao.prepareStatement(deletePreparo);
+                            psDeletePreparo.setInt(1, idPreparoDeletar);
+                            psDeletePreparo.executeUpdate();
+                        }
+
                         System.out.println("Receita deletada com sucesso!");
-
-
-
                         break;
                     case 0:
                         System.out.println("Programa Finalizado");
