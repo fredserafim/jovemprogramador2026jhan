@@ -20,6 +20,7 @@ public class Aula17 {
 
             int usuarioId = 0;
             int opLogin = -1;
+            boolean logado =false;
 
             //===================================== LOGIN ===============================
             do {
@@ -28,6 +29,15 @@ public class Aula17 {
                   1 - Cadastrar novo usuario
                   2 - Entrar
                   """);
+                while(!sc.hasNextInt()){
+                    System.out.println("Apenas Números, tente novamente!");
+                    System.out.println("""
+                  *****LOGIN*****
+                  1 - Cadastrar novo usuario
+                  2 - Entrar
+                  """);
+                    sc.next();
+                }
                 opLogin = sc.nextInt();
                 sc.nextLine();
                 if (opLogin < 1 || opLogin > 2) {
@@ -50,36 +60,39 @@ public class Aula17 {
                 ps.executeUpdate();
 
                 System.out.println("Usuário cadastrado com sucesso!");
+                opLogin = 2;
 
             }
 
             if (opLogin == 2) {
-                System.out.println("Nome:");
-                String nome = sc.nextLine();
+                do {
+                    System.out.println("Nome:");
+                    String nome = sc.nextLine();
 
-                System.out.println("Senha:");
-                String senha = sc.nextLine();
+                    System.out.println("Senha:");
+                    String senha = sc.nextLine();
 
-                String mySQL = "SELECT id FROM usuario WHERE nome = ? AND senha = ?";
-                PreparedStatement ps = conexao.prepareStatement(mySQL);
-                ps.setString(1, nome);
-                ps.setString(2, senha);
-                ResultSet rs = ps.executeQuery();
+                    String mySQL = "SELECT id FROM usuario WHERE nome = ? AND senha = ?";
+                    PreparedStatement ps = conexao.prepareStatement(mySQL);
+                    ps.setString(1, nome);
+                    ps.setString(2, senha);
+                    ResultSet rs = ps.executeQuery();
 
-                if (rs.next()) {
-                    usuarioId = rs.getInt("id");
-                    System.out.println("Login realizado!");
-                } else {
-                    System.out.println("Usuário Inválido!");
-                    return;
-                }
+                    if (rs.next()) {
+                        usuarioId = rs.getInt("id");
+                        System.out.println("Login realizado!");
+                        logado = true;
+                    } else {
+                        System.out.println("Usuário Inválido!\n");
+
+                    }
+                }while(!logado);
             }
 
 
 
             //===================================== RECEITA ===============================
             do {
-                Thread.sleep(1000);
                 String sql = "SELECT COUNT(*) AS total FROM receita";
 
                 PreparedStatement ps = conexao.prepareStatement(sql);
@@ -104,14 +117,19 @@ public class Aula17 {
                       Receitas existentes : %d
                       """,totalReceitas);
                     System.out.println(" Digite a opção :");
+                    while(!sc.hasNextInt()) {
+                        System.out.println("Apenas Números, tente novamente\n!");
+                        sc.next();
+                    }
                     opcao = sc.nextInt();
                     sc.nextLine();
                     if (opcao < 0 || opcao > 4) {
                         System.out.println(" \nOpção invalida");
                     }
-                }while(opcao < 2 || opcao > 4);
+                }while(opcao < 0 || opcao > 4);
 
                 switch (opcao){
+
                     case 1:
 
                         System.out.println("Adicionar Receita");
@@ -120,6 +138,10 @@ public class Aula17 {
                         String titulo = sc.nextLine();
 
                         System.out.println("Digite o tempo: ");
+                        while(!sc.hasNextInt()){
+                            System.out.println("Apenas Números, tente novamente!");
+                            sc.next();
+                        }
                         int tempo = sc.nextInt();
                         int complexidade_id = 0;
                         do{
@@ -129,6 +151,10 @@ public class Aula17 {
                                      2 - Media
                                      3 - Dificil
                                      """);
+                            while(!sc.hasNextInt()){
+                                System.out.println("Apenas Números, tente novamente!");
+                                sc.next();
+                            }
                           complexidade_id = sc.nextInt();
                           if(complexidade_id < 1 || complexidade_id >3) {
                             System.out.println(" \nOpção invalida");
@@ -137,6 +163,10 @@ public class Aula17 {
                         }while(complexidade_id < 1 || complexidade_id >3);
 
                         System.out.println("Digite quantas pessoas serve: ");
+                        while(!sc.hasNextInt()){
+                            System.out.println("Apenas Números, tente novamente!");
+                            sc.next();
+                        }
                         int porcoes = sc.nextInt();
                         int categoria_id=0;
                         do {
@@ -146,6 +176,10 @@ public class Aula17 {
                                     2 - Salgado
                                     3 - Agridoce
                                     """);
+                            while(!sc.hasNextInt()){
+                                System.out.println("Apenas Números, tente novamente!");
+                                sc.next();
+                            }
                             categoria_id = sc.nextInt();
                             sc.nextLine();
                             if (categoria_id < 1 || categoria_id > 3) {
@@ -195,6 +229,10 @@ public class Aula17 {
                             String nomeIng = sc.nextLine().trim().toLowerCase();
 
                             System.out.println("Quantidade: ");
+                            while(!sc.hasNextDouble()){
+                                System.out.println("Apenas Números, tente novamente!");
+                                sc.next();
+                            }
                             double qtd = sc.nextDouble();
                             sc.nextLine();
 
@@ -233,6 +271,10 @@ public class Aula17 {
                                 System.out.println("""
                                     Gostaria de acrescentar mais algum ingrediente?
                                     1 - Sim / 2 - Não""");
+                                while(!sc.hasNextInt()){
+                                    System.out.println("Apenas Números, tente novamente!");
+                                    sc.next();
+                                }
                                 continuarIng = sc.nextInt();
                                 sc.nextLine();
                                 if (continuarIng < 1 || continuarIng > 2) {
@@ -279,6 +321,10 @@ public class Aula17 {
                                 System.out.println("""
                                     Gostaria de acrescentar mais algum utensilio?
                                     1 - Sim / 2 - Não""");
+                                while(!sc.hasNextInt()){
+                                    System.out.println("Apenas Números, tente novamente!");
+                                    sc.next();
+                                }
                                 continuarUt = sc.nextInt();
                                 sc.nextLine();
                                 if (continuarUt < 1 || continuarUt > 2) {
@@ -326,6 +372,10 @@ public class Aula17 {
                         }
 
                         System.out.println("Qual receita deseja (digite o ID): ");
+                        while(!sc.hasNextInt()){
+                            System.out.println("Apenas Números, tente novamente!");
+                            sc.next();
+                        }
                         int tituloid1 = sc.nextInt();
                         sc.nextLine();
 
@@ -425,6 +475,10 @@ public class Aula17 {
                         stmtList.close();
 
                         System.out.println("Digite o ID da receita:");
+                            while(!sc.hasNextInt()){
+                                System.out.println("Apenas Números, tente novamente!");
+                                sc.next();
+                            }
                         int idReceita = sc.nextInt();
                         sc.nextLine();
 
@@ -445,6 +499,10 @@ public class Aula17 {
                                                     8 - Editar utensílios
                                                     0 - Finalizar edição
                                                   """);
+                                while(!sc.hasNextInt()){
+                                    System.out.println("Apenas Números, tente novamente!");
+                                    sc.next();
+                                }
                                 opcEdit = sc.nextInt();
                                 sc.nextLine();
                                 if (opcEdit < 0 || opcEdit > 9) {
@@ -471,6 +529,10 @@ public class Aula17 {
                                 // tempo
                                 case 2:
                                     System.out.println("Novo tempo:");
+                                    while(!sc.hasNextInt()){
+                                        System.out.println("Apenas Números, tente novamente!");
+                                        sc.next();
+                                    }
                                     int novoTempo = sc.nextInt();
                                     sc.nextLine();
 
@@ -486,6 +548,10 @@ public class Aula17 {
                                 // porcoes
                                 case 3:
                                     System.out.println("Novas porções:");
+                                    while(!sc.hasNextInt()){
+                                        System.out.println("Apenas Números, tente novamente!");
+                                        sc.next();
+                                    }
                                     int novasPorcoes = sc.nextInt();
                                     sc.nextLine();
 
@@ -500,9 +566,23 @@ public class Aula17 {
 
                                 // categoria
                                 case 4:
-                                    System.out.println("Nova categoria (id):");
-                                    int cat = sc.nextInt();
-                                    sc.nextLine();
+                                    int cat = 0;
+                                    do {
+                                        System.out.println("""
+                                                         Nova categoria:
+                                                         1 - Doce
+                                                         2 - Salgado
+                                                         3 - Agridoce
+                                                          """);
+                                        while(!sc.hasNextInt()){
+                                            System.out.println("Apenas Números, tente novamente!");
+                                            sc.next();
+                                        }cat = sc.nextInt();
+                                        sc.nextLine();
+                                        if (cat < 1 || cat > 3) {
+                                            System.out.println(" \nOpção invalida");
+                                        }
+                                    }while(cat < 1 || cat > 3);
 
                                     String up4 = "UPDATE receita SET categoria_id = ? WHERE id = ?";
                                     PreparedStatement ps4 = conexao.prepareStatement(up4);
@@ -555,8 +635,9 @@ public class Aula17 {
                                 // ingredientes
                                 case 7:
 
-                                    System.out.println("Ingredientes da receita:");
-
+                                    System.out.println("\n==============================");
+                                    System.out.println("      INGREDIENTES ATUAIS     ");
+                                    System.out.println("==============================\n");
                                     String selectIng = ("""
                                                         SELECT ir.id, i.ingrediente
                                                         FROM ingrediente_receita ir
@@ -574,12 +655,20 @@ public class Aula17 {
 
                                     int opIng = -1;
                                     do {
+
                                         System.out.println("""
+                                                        =====================================
+                                                             O QUE DESEJA FAZER AGORA?
+                                                        =====================================
                                                         1 - Trocar ingrediente
                                                         2 - Remover ingrediente
                                                         3 - Adicionar ingrediente
                                                         0 - Voltar
                                                         """);
+                                        while(!sc.hasNextInt()){
+                                            System.out.println("Apenas Números, tente novamente!");
+                                            sc.next();
+                                        }
                                         opIng = sc.nextInt();
                                         sc.nextLine();
                                         if (opIng < 0 || opIng > 3) {
@@ -589,27 +678,107 @@ public class Aula17 {
 
 
                                     if (opIng == 1) {
+                                        System.out.println("Ingredientes da receita:");
 
-                                        System.out.println("ID da relação ingrediente_receita:");
+                                         selectIng = ("""
+                                                SELECT ir.id, i.ingrediente
+                                                FROM ingrediente_receita ir
+                                                JOIN ingredientes i ON i.id = ir.ingredientes_id
+                                                WHERE ir.receita_id = ?;
+                                                """);
+
+                                        PreparedStatement psIngEdit2 = conexao.prepareStatement(selectIng);
+                                        psIngEdit2.setInt(1, idReceita);
+
+                                        ResultSet rsIngEdit2 = psIngEdit2.executeQuery();
+
+                                        while (rsIngEdit2.next()) {
+                                            System.out.println("ID da relação: " +
+                                                    rsIngEdit2.getInt("id") + " | Ingrediente: " +
+                                                    rsIngEdit2.getString("ingrediente")
+                                            );
+                                        }
+
+                                        System.out.println("\nDigite o ID da relação que deseja alterar:");
+                                        while (!sc.hasNextInt()) {
+                                            System.out.println("Digite apenas números!");
+                                            sc.next();
+                                        }
                                         int relId = sc.nextInt();
                                         sc.nextLine();
 
-                                        System.out.println("Novo ingrediente (id):");
-                                        int novoIng = sc.nextInt();
-                                        sc.nextLine();
+                                        System.out.println("Novo ingrediente:");
+                                        String novoIngrediente = sc.nextLine().trim().toLowerCase();
 
-                                        String upIng = "UPDATE ingrediente_receita SET ingredientes_id = ? WHERE id = ?";
+                                        String sqlBusca = ("""
+                                                SELECT id
+                                                FROM ingredientes
+                                                WHERE LOWER(ingrediente) = ?;
+                                                """);
+
+                                        PreparedStatement psBusca = conexao.prepareStatement(sqlBusca);
+                                        psBusca.setString(1, novoIngrediente);
+
+                                        ResultSet rsBusca = psBusca.executeQuery();
+
+                                        int novoIngId;
+
+                                        if (rsBusca.next()) {
+
+                                            //  já existe
+                                            novoIngId = rsBusca.getInt("id");
+
+                                        } else {
+
+                                            // cadastra inexistentes
+                                            System.out.println("Unidade de medida:");
+                                            String unidade = sc.nextLine();
+
+                                            String insertIng = ("""
+                                                    INSERT INTO ingredientes (ingrediente, unidade_medida)
+                                                    VALUES (?, ?);
+                                                    """);
+
+                                            PreparedStatement psInsert = conexao.prepareStatement(
+                                                    insertIng,
+                                                    Statement.RETURN_GENERATED_KEYS
+                                            );
+
+                                            psInsert.setString(1, novoIngrediente);
+                                            psInsert.setString(2, unidade);
+
+                                            psInsert.executeUpdate();
+
+                                            ResultSet rsKey = psInsert.getGeneratedKeys();
+                                            rsKey.next();
+
+                                            novoIngId = rsKey.getInt(1);
+                                        }
+                                        //atualiza
+                                        String upIng = ("""
+                                                UPDATE ingrediente_receita
+                                                SET ingredientes_id = ?
+                                                WHERE id = ?;
+                                                """);
+
                                         PreparedStatement psUpIng = conexao.prepareStatement(upIng);
-                                        psUpIng.setInt(1, novoIng);
+
+                                        psUpIng.setInt(1, novoIngId);
                                         psUpIng.setInt(2, relId);
+
                                         psUpIng.executeUpdate();
 
-                                        System.out.println("Ingrediente alterado!");
+                                        System.out.println("Ingrediente alterado com sucesso!");
+
                                     }
 
                                     if (opIng == 2) {
 
                                         System.out.println("ID da relação para remover:");
+                                        while(!sc.hasNextInt()) {
+                                            System.out.println("Apenas Números, tente novamente!");
+                                            sc.next();
+                                        }
                                         int relId = sc.nextInt();
                                         sc.nextLine();
 
@@ -627,6 +796,10 @@ public class Aula17 {
                                         String nomeIng = sc.nextLine().trim().toLowerCase();
 
                                         System.out.println("Quantidade:");
+                                        while(!sc.hasNextDouble()) {
+                                            System.out.println("Apenas Números, tente novamente!");
+                                            sc.next();
+                                        }
                                         double qtd = sc.nextDouble();
                                         sc.nextLine();
 
@@ -668,8 +841,9 @@ public class Aula17 {
 
                                 // utensilios
                                 case 8:
-
-                                    System.out.println("Utensílios:");
+                                    System.out.println("\n==============================");
+                                    System.out.println("        UTENSILIOS ATUAIS       ");
+                                    System.out.println("==============================\n");
 
                                     String selectUt = ("""
                                                         SELECT fr.id, f.utensilios
@@ -689,11 +863,18 @@ public class Aula17 {
                                     int opUt = -1;
                                     do {
                                         System.out.println("""
-                                                         1 - Trocar utensílio
-                                                         2 - Remover utensílio
-                                                         3 - Adicionar utensílio
-                                                         0 - Voltar
+                                                        =====================================
+                                                             O QUE DESEJA FAZER AGORA?
+                                                        =====================================
+                                                        1 - Trocar utensílio
+                                                        2 - Remover utensílio
+                                                        3 - Adicionar utensílio
+                                                        0 - Voltar
                                                         """);
+                                        while(!sc.hasNextInt()) {
+                                            System.out.println("Apenas Números, tente novamente!");
+                                            sc.next();
+                                        }
                                         opUt = sc.nextInt();
                                         sc.nextLine();
                                         if (opUt < 0 || opUt > 3) {
@@ -704,26 +885,92 @@ public class Aula17 {
 
                                     if (opUt == 1) {
 
-                                        System.out.println("ID da relação:");
-                                        int relId = sc.nextInt();
-                                        sc.nextLine();
+                                            System.out.println("\nUtensílios da receita:");
 
-                                        System.out.println("Novo utensílio (id):");
-                                        int novoUt = sc.nextInt();
-                                        sc.nextLine();
+                                            PreparedStatement psUtEdit2 = conexao.prepareStatement(selectUt);
+                                            psUtEdit2.setInt(1, idReceita);
 
-                                        String upUt = "UPDATE ferramenta_receita SET ferramentas_id = ? WHERE id = ?";
-                                        PreparedStatement psUp = conexao.prepareStatement(upUt);
-                                        psUp.setInt(1, novoUt);
-                                        psUp.setInt(2, relId);
-                                        psUp.executeUpdate();
+                                            ResultSet rsUtEdit2 = psUtEdit2.executeQuery();
 
-                                        System.out.println("Utensílio atualizado!");
-                                    }
+                                            while (rsUtEdit2.next()) {
+                                                System.out.println("ID da relação: " + rsUtEdit2.getInt("id") +
+                                                        " | Utensílio: " + rsUtEdit2.getString("utensilios"));
+                                            }
+
+                                            System.out.println("\nDigite o ID da relação que deseja alterar:");
+                                            while (!sc.hasNextInt()) {
+                                                System.out.println("Digite apenas números!");
+                                                sc.next();
+                                            }
+                                            int relId = sc.nextInt();
+                                            sc.nextLine();
+
+                                            System.out.println("Novo utensílio:");
+                                            String novoUtensilio = sc.nextLine().trim().toLowerCase();
+
+                                            String sqlBusca = ("""
+                                                                SELECT id
+                                                                FROM ferramentas
+                                                                WHERE LOWER(utensilios) = ?;
+                                                                 """);
+
+                                            PreparedStatement psBusca = conexao.prepareStatement(sqlBusca);
+                                            psBusca.setString(1, novoUtensilio);
+
+                                            ResultSet rsBusca = psBusca.executeQuery();
+
+                                            int novoUtId;
+
+                                            if (rsBusca.next()) {
+
+                                                // já existe
+                                                novoUtId = rsBusca.getInt("id");
+
+                                            } else {
+
+                                                // novo utensílio
+                                                String insertUt = ("""
+                                                             INSERT INTO ferramentas (utensilios)
+                                                             VALUES (?);
+                                                              """);
+
+                                                PreparedStatement psInsert = conexao.prepareStatement(
+                                                        insertUt,
+                                                        Statement.RETURN_GENERATED_KEYS
+                                                );
+
+                                                psInsert.setString(1, novoUtensilio);
+                                                psInsert.executeUpdate();
+
+                                                ResultSet rsKey = psInsert.getGeneratedKeys();
+                                                rsKey.next();
+
+                                                novoUtId = rsKey.getInt(1);
+                                            }
+
+                                            String update = ("""
+                                                            UPDATE ferramenta_receita
+                                                            SET ferramentas_id = ?
+                                                            WHERE id = ?;
+                                                             """);
+
+                                            PreparedStatement psUpdate = conexao.prepareStatement(update);
+
+                                            psUpdate.setInt(1, novoUtId);
+                                            psUpdate.setInt(2, relId);
+
+                                            psUpdate.executeUpdate();
+
+                                            System.out.println("Utensílio alterado com sucesso!");
+                                        }
 
                                     if (opUt == 2) {
 
                                         System.out.println("ID da relação:");
+                                        while (!sc.hasNextInt()) {
+                                            System.out.println("Digite apenas números!");
+                                            sc.next();
+                                        }
                                         int relId = sc.nextInt();
                                         sc.nextLine();
 
@@ -774,7 +1021,7 @@ public class Aula17 {
                         }
 
                         break;
-                        case 4:
+                    case 4:
                         System.out.println("delete");
 
                         String selectReceitasDelete = "SELECT id, titulo, tempo FROM receita";
@@ -791,8 +1038,21 @@ public class Aula17 {
                         stmtListDelete.close();
 
                         System.out.println("Digite o ID que gostaria de deletar: ");
+                        while (!sc.hasNextInt()) {
+                            System.out.println("Digite apenas números!");
+                            sc.next();
+                        }
                         int idDelete = sc.nextInt();
                         sc.nextLine();
+
+                        String selectIdPreparo = "SELECT preparo_id FROM receita WHERE id = ?";
+                        PreparedStatement psSelectIdPrep = conexao.prepareStatement(selectIdPreparo);
+                        psSelectIdPrep.setInt(1, idDelete);
+                        ResultSet rsIdPrep = psSelectIdPrep.executeQuery();
+                        int idPreparoDeletar = 0;
+                        if(rsIdPrep.next()) {
+                            idPreparoDeletar = rsIdPrep.getInt("preparo_id");
+                        }
 
                         String deleteFerramentaReceita = "DELETE FROM ferramenta_receita WHERE receita_id = ?";
                         PreparedStatement psDeleteFerramentaReceita = conexao.prepareStatement(deleteFerramentaReceita);
@@ -809,10 +1069,14 @@ public class Aula17 {
                         psDelete.setInt(1, idDelete);
                         psDelete.executeUpdate();
 
+                        if (idPreparoDeletar > 0) {
+                            String deletePreparo = "DELETE FROM preparo WHERE id = ?";
+                            PreparedStatement psDeletePreparo = conexao.prepareStatement(deletePreparo);
+                            psDeletePreparo.setInt(1, idPreparoDeletar);
+                            psDeletePreparo.executeUpdate();
+                        }
+
                         System.out.println("Receita deletada com sucesso!");
-
-
-
                         break;
                     case 0:
                         System.out.println("Programa Finalizado");
