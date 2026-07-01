@@ -207,7 +207,6 @@ Aula17.java
 
 # 📚 Conceitos Aplicados
 
-- Programação Orientada a Objetos (POO)
 - JDBC
 - SQL
 - Banco de Dados Relacional
